@@ -1,0 +1,7 @@
+-O0
+-ffreestanding
+-MMD
+-MP
+-I.
+-Iinclude
+-std=c99

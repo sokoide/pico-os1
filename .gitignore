@@ -1,0 +1,7 @@
+.tags
+*.o
+*.d
+*.map
+*.hex
+*.elf
+*.uf2

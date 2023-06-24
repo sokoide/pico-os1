@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/pico-os1.elf",
+            "name": "Debug with OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "gdbPath": "arm-none-eabi-gdb",
+            "device": "RP2040",
+            "configFiles": ["interface/cmsis-dap.cfg", "target/rp2040.cfg"],
+            // Work around for stopping at main on restart
+            "postRestartCommands": ["break main", "continue"],
+            "searchDir": [],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "preLaunchTask": "make"
+        }
+    ]
+}
