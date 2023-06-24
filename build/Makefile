@@ -1,8 +1,6 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
+.DEFAULT_GOAL := all
 RM := rm -rf
+
 
 # All of the sources participating in the build are defined here
 -include sources.mk
@@ -21,6 +19,7 @@ BUILD_MAP = $(BUILD_ARTIFACT_NAME).map
 BUILD_HEX = $(BUILD_ARTIFACT_NAME).hex
 BUILD_SIZE = $(BUILD_ARTIFACT_NAME).siz
 
+DEPS := $(OBJS:.o=.d)
 
 # All Target
 all: main-build
@@ -50,8 +49,7 @@ $(BUILD_SIZE): $(BUILD_ARTIFACT) makefile objects.mk
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS) $(BUILD_HEX) $(BUILD_SIZE) $(BUILD_ARTIFACT) $(BUILD_MAP)
-	find . \( -name '*.o' -o -name '*.d' \) -exec rm {} \;
+	-$(RM) $(OBJS) $(BUILD_HEX) $(BUILD_SIZE) $(BUILD_ARTIFACT) $(BUILD_MAP) $(DEPS)
 	-@echo ' '
 
 secondary-outputs: $(BUILD_HEX) $(BUILD_SIZE)

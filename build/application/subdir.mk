@@ -9,9 +9,6 @@ C_SRCS += \
 OBJS += \
 ./application/main.o
 
-C_DEPS += \
-./application/main.d
-
 
 # Each subdirectory must supply rules for building sources it contributes
 application/%.o: ../application/%.c application/subdir.mk

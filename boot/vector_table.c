@@ -26,7 +26,7 @@ void (*const vector_tbl[])() __attribute__((section(".vector"))) = {
     default_handler,          // 11: Svcall
     0,                        // 12: Not Used
     0,                        // 13: Not Used
-    default_handler,          // 14: Pend SV
+    dispatch_entry,           // 14: Pend SV
     default_handler,          // 15: Systick
     default_handler,          // IRQ 0
     default_handler,          // IRQ 1
