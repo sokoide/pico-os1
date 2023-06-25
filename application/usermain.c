@@ -1,4 +1,4 @@
-﻿#include <kernel.h>
+﻿#include <api.h>
 
 // task stack
 #define STACK_SIZE 1024
@@ -105,12 +105,14 @@ void sleep_wake() {
     sk_start_task(t4, 0);
 }
 
+void events() {}
+
 int usermain(void) {
     tm_putstring("usermain started...\r\n");
 
     // enable only one of below
-    preemptive_multi_tasking();
-    /* sleep_wake(); */
+    /* preemptive_multi_tasking(); */
+    sleep_wake();
 
     tm_putstring("usermain exitting...\r\n");
     return 0;

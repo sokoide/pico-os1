@@ -1,6 +1,4 @@
-#include <errors.h>
-#include <kerneldef.h>
-#include <sysdef.h>
+#include <kernel.h>
 
 void systimer_handler(void) {
     TaskControlBlock* tcb;

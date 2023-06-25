@@ -83,13 +83,6 @@ extern void task_queue_remove_top(TaskControlBlock** queue);
 extern void task_queue_remove_entry(TaskControlBlock** queue,
                                     TaskControlBlock* tcb);
 
-extern ID sk_create_task(const TaskInfo* ti);
-extern ERR sk_start_task(ID id, INT stacd);
-extern void sk_exit_task(void);
-extern ERR sk_delay_task(RELTIME delay_time);
-ERR sk_sleep_task(TIMEOUT timeout);
-ERR sk_wakeup_task(ID id);
-
 extern int main(void);
 extern int usermain(void);
 

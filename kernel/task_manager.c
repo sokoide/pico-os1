@@ -1,6 +1,4 @@
-#include <errors.h>
-#include <kerneldef.h>
-#include <sysdef.h>
+#include <kernel.h>
 
 TaskControlBlock tcb_table[MAX_TASK_ID];
 TaskControlBlock* ready_queue[MAX_TASK_PRI];
