@@ -60,3 +60,6 @@ task2...
   * removes the current task from the top of ready_queue and add it to the tail
   * calls `scheduler`
 
+## Refefrence
+
+* [μT-Kernel 3.0](https://github.com/tron-forum/mtkernel_3)

@@ -3,7 +3,8 @@ C_SRCS += \
 ../kernel/syslib.c \
 ../kernel/context.c \
 ../kernel/task_manager.c \
-../kernel/systimer.c
+../kernel/systimer.c \
+../kernel/event.c
 
 ASM_SRCS += \
 ../kernel/dispatch.s
@@ -13,7 +14,8 @@ OBJS += \
 ./kernel/syslib.o \
 ./kernel/context.o \
 ./kernel/task_manager.o \
-./kernel/systimer.o
+./kernel/systimer.o \
+./kernel/event.o
 
 
 

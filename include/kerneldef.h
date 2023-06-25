@@ -7,16 +7,7 @@
 /* constants */
 #define MAX_TASK_ID 32
 #define MAX_TASK_PRI 16
-
-#define TA_HLNG 0x0000001    // the task is written in high level language
-#define TA_USERBUF 0x0000020 // stack to use a buffer specified by a user
-#define TA_RNG0 0x0000000    // the task to run in ring 0
-#define TA_RNG1 0x0000100    // the task to run in ring 1
-#define TA_RNG2 0x0000200    // the task to run in ring 2
-#define TA_RNG3 0x0000300    // the task to run in ring 3
-
-#define TMO_POL (0)   // 0 timeout
-#define TMO_FEVR (-1) // forever
+#define MAX_FLAG_ID 8
 
 /* enums */
 typedef enum {
@@ -30,7 +21,10 @@ typedef enum {
     TWFCT_NON = 0,
     TWFCT_DLY = 1, // waited by sk_dly_tsk
     TWFCT_SLP = 2, // waited by sk_slp_tsk
+    TWFCT_FLG = 3, // waited by sk_wait_flag
 } TaskWaitFactor;
+
+typedef enum { KS_NONEXIST = 0, KS_EXIST = 1 } KernelState;
 
 /* structs */
 typedef struct _task_control_block {
@@ -52,15 +46,17 @@ typedef struct _task_control_block {
     TaskWaitFactor wait_factor;
     RELTIME wait_time;
     ERR* wait_err;
+
+    // event flag wait info
+    UINT wait_pattern;
+    UINT wait_mode;
+    UINT* p_flag_pattern; // flag pattern when wait canceled
 } TaskControlBlock;
 
 typedef struct {
-    ATTR task_attr;
-    FP task;
-    PRI task_pri;
-    SZ stack_size;
-    void* stack;
-} TaskInfo;
+    KernelState state;
+    UINT pattern;
+} FlagControlBlock;
 
 /* global variables */
 extern TaskControlBlock tcb_table[];
@@ -70,6 +66,7 @@ extern TaskControlBlock*
     scheduled_task; // scheduled task which will be executed after the curr_task
 extern TaskControlBlock* wait_queue;
 extern UW dispatch_running;
+extern FlagControlBlock fcb_table[];
 
 /* global functions */
 extern void reset_handler(void);

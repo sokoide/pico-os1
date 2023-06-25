@@ -19,7 +19,7 @@ TaskInfo initial_task = {
     .stack = stack_initialtask,
 };
 
-// functions
+// internal functions
 int main(void) {
     // initialize tcb_table
     for (INT i = 0; i < MAX_TASK_ID; i++) {
@@ -95,12 +95,22 @@ void scheduler(void) {
     }
 }
 
-void initial_task_func(INT stacd, void* exinf) {
+void initial_task_func(INT stacd /* not used */, void* exinf /* not used */) {
     tm_com_init();
     tm_putstring("initial task started.\r\n");
 
     usermain();
     sk_exit_task();
+}
+
+// API
+void sk_create_taskinfo(TaskInfo* info, ATTR attr, FP task, PRI pri, SZ sz,
+                        void* stack) {
+    info->task_attr = attr;
+    info->task = task;
+    info->task_pri = pri;
+    info->stack_size = sz;
+    info->stack = stack;
 }
 
 ID sk_create_task(const TaskInfo* ti) {
@@ -143,7 +153,7 @@ ID sk_create_task(const TaskInfo* ti) {
     return id;
 }
 
-ERR sk_start_task(ID id, INT stacd) {
+ERR sk_start_task(ID id, INT stacd /* not used */) {
     TaskControlBlock* tcb;
     UINT interrupt_status;
     ERR err = E_OK;

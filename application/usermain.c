@@ -1,15 +1,18 @@
 ﻿#include <api.h>
 
-// task stack
+// task
 #define STACK_SIZE 1024
 UB stack_task1[STACK_SIZE];
 UB stack_task2[STACK_SIZE];
 UB stack_task3[STACK_SIZE];
-UB stack_task4[STACK_SIZE];
+TaskInfo task1, task2, task3;
+ID t1, t2, t3;
 
-ID t3, t4;
+// flag
+ID fid;
+FlagInfo fi;
 
-void task_1(void) {
+void task_1(INT stacd, void* exinf) {
     tm_putstring("task1 started...\r\n");
     /* for (INT i = 0; i < 5000; i++) { */
     /*     tm_putstring("task1 looping...\r\n"); */
@@ -22,7 +25,7 @@ void task_1(void) {
     sk_exit_task();
 }
 
-void task_2(void) {
+void task_2(INT stacd, void* exinf) {
     tm_putstring("task2 started...\r\n");
     /* for (INT i = 0; i < 10000; i++) { */
     /*     tm_putstring("task2 looping...\r\n"); */
@@ -35,63 +38,70 @@ void task_2(void) {
     sk_exit_task();
 }
 
-void task_3(void) {
-    tm_putstring("task3 started...\r\n");
+void task_waker(INT stacd, void* exinf) {
+    tm_putstring("waker started...\r\n");
     while (1) {
-        tm_putstring("task3 sleeping...\r\n");
+        tm_putstring("waker sleeping...\r\n");
         sk_delay_task(1000);
-        tm_putstring("task4 waking task4...\r\n");
-        sk_wakeup_task(t4);
+        tm_putstring("waker waking sleeper...\r\n");
+        sk_wakeup_task(t2);
     }
-    tm_putstring("task3 exitting...\r\n");
+    tm_putstring("waker exitting...\r\n");
     sk_exit_task();
 }
 
-void task_4(void) {
-    tm_putstring("task4 started...\r\n");
+void task_sleeper(INT stacd, void* exinf) {
+    tm_putstring("sleeper started...\r\n");
     while (1) {
-        tm_putstring("task4 sleeping...\r\n");
+        tm_putstring("sleeper sleeping...\r\n");
         sk_sleep_task(TMO_FEVR);
-        tm_putstring("task4 woke up\r\n");
+        tm_putstring("sleeper woke up\r\n");
     }
-    tm_putstring("task4 exitting...\r\n");
+    tm_putstring("sleeper exitting...\r\n");
     sk_exit_task();
 }
 
-TaskInfo task1 = {
-    .task_attr = TA_HLNG | TA_RNG3 | TA_USERBUF,
-    .task = task_1,
-    .task_pri = 10,
-    .stack_size = sizeof(stack_task1),
-    .stack = stack_task1,
-};
+void task_button(INT stacd, void* exinf) {
+    tm_putstring("task_button started...\r\n");
+    while (1) {
+        tm_putstring("task_button: btn-1 on\r\n");
+        sk_set_flag(fid, (1 << 0));
+        sk_delay_task(500);
+        tm_putstring("task_button: btn-2 on\r\n");
+        sk_set_flag(fid, (1 << 1));
+        sk_delay_task(1000);
+    }
+    tm_putstring("task_button exitting...\r\n");
+    sk_exit_task();
+}
 
-TaskInfo task2 = {
-    .task_attr = TA_HLNG | TA_RNG3 | TA_USERBUF,
-    .task = task_2,
-    .task_pri = 10,
-    .stack_size = sizeof(stack_task2),
-    .stack = stack_task2,
-};
+void task_led1(INT stacd, void* exinf) {
+    tm_putstring("task_led1 started...\r\n");
+    UINT pattern;
+    while (1) {
+        sk_wait_flag(fid, (1 << 0), TWF_ANDW | TWF_BITCLR, &pattern, TMO_FEVR);
+        tm_putstring("task_led1: flagged\r\n");
+    }
+    tm_putstring("task_led1 exitting...\r\n");
+    sk_exit_task();
+}
 
-TaskInfo task3 = {
-    .task_attr = TA_HLNG | TA_RNG3 | TA_USERBUF,
-    .task = task_3,
-    .task_pri = 10,
-    .stack_size = sizeof(stack_task3),
-    .stack = stack_task3,
-};
-
-TaskInfo task4 = {
-    .task_attr = TA_HLNG | TA_RNG3 | TA_USERBUF,
-    .task = task_4,
-    .task_pri = 10,
-    .stack_size = sizeof(stack_task4),
-    .stack = stack_task4,
-};
+void task_led2(INT stacd, void* exinf) {
+    tm_putstring("task_led2 started...\r\n");
+    UINT pattern;
+    while (1) {
+        sk_wait_flag(fid, (1 << 1), TWF_ANDW | TWF_BITCLR, &pattern, TMO_FEVR);
+        tm_putstring("task_led2: flagged\r\n");
+    }
+    tm_putstring("task_led2 exitting...\r\n");
+    sk_exit_task();
+}
 
 void preemptive_multi_tasking() {
-    ID t1, t2;
+    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_1, 10,
+                       sizeof(stack_task1), &stack_task1);
+    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_2, 10,
+                       sizeof(stack_task2), &stack_task2);
     t1 = sk_create_task(&task1);
     t2 = sk_create_task(&task2);
     sk_start_task(t1, 0);
@@ -99,13 +109,34 @@ void preemptive_multi_tasking() {
 }
 
 void sleep_wake() {
-    t3 = sk_create_task(&task3);
-    t4 = sk_create_task(&task4);
-    sk_start_task(t3, 0);
-    sk_start_task(t4, 0);
+    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_waker, 10,
+                       sizeof(stack_task1), &stack_task1);
+    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_sleeper, 10,
+                       sizeof(stack_task2), &stack_task2);
+    t1 = sk_create_task(&task1);
+    t2 = sk_create_task(&task2);
+    sk_start_task(t1, 0);
+    sk_start_task(t2, 0);
 }
 
-void events() {}
+void events() {
+    fi.attr = TA_TFIFO | TA_WMUL;
+    fi.initial_value = 0;
+    fid = sk_create_flag(&fi);
+
+    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_button, 10,
+                       sizeof(stack_task1), &stack_task1);
+    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_led1, 10,
+                       sizeof(stack_task2), &stack_task2);
+    sk_create_taskinfo(&task3, TA_HLNG | TA_RNG3 | TA_USERBUF, task_led2, 10,
+                       sizeof(stack_task3), &stack_task3);
+    t1 = sk_create_task(&task1);
+    t2 = sk_create_task(&task2);
+    t3 = sk_create_task(&task3);
+    sk_start_task(t1, 0);
+    sk_start_task(t2, 0);
+    sk_start_task(t3, 0);
+}
 
 int usermain(void) {
     tm_putstring("usermain started...\r\n");
@@ -113,6 +144,7 @@ int usermain(void) {
     // enable only one of below
     /* preemptive_multi_tasking(); */
     sleep_wake();
+    /* events(); */
 
     tm_putstring("usermain exitting...\r\n");
     return 0;
