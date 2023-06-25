@@ -1,10 +1,12 @@
 #include <errors.h>
 #include <kerneldef.h>
+#include <sysdef.h>
 
 TaskControlBlock tcb_table[MAX_TASK_ID];
 TaskControlBlock* ready_queue[MAX_TASK_PRI];
 TaskControlBlock* curr_task;
 TaskControlBlock* scheduled_task;
+TaskControlBlock* wait_queue;
 UW dispatch_running = 0;
 
 ID initial_task_id;
@@ -179,3 +181,74 @@ void sk_exit_task(void) {
     EI(interrupt_status);
 }
 
+ERR sk_delay_task(RELTIME delay_time) {
+    UINT interrupt_status;
+    ERR err = E_OK;
+
+    DI(interrupt_status);
+    if (delay_time > 0) {
+        task_queue_remove_top(&ready_queue[curr_task->task_pri]);
+
+        curr_task->state = TS_WAIT;
+        curr_task->wait_factor = TWFCT_DLY;
+        curr_task->wait_time = delay_time + TIMER_PERIOD;
+        curr_task->wait_err = &err;
+
+        task_queue_add_entry(&wait_queue, curr_task);
+        scheduler();
+    }
+    EI(interrupt_status);
+    return err;
+}
+
+ERR sk_sleep_task(TIMEOUT timeout) {
+    UINT interrupt_status;
+    ERR err = E_OK;
+
+    DI(interrupt_status);
+    if (curr_task->wakeup_count > 0) {
+        curr_task->wakeup_count--;
+    } else {
+        task_queue_remove_top(&ready_queue[curr_task->task_pri]);
+
+        curr_task->state = TS_WAIT;
+        curr_task->wait_factor = TWFCT_SLP;
+        curr_task->wait_time =
+            (timeout == TMO_FEVR) ? timeout : (timeout + TIMER_PERIOD);
+        curr_task->wait_err = &err;
+
+        task_queue_add_entry(&wait_queue, curr_task);
+        scheduler();
+    }
+    EI(interrupt_status);
+    return err;
+}
+
+ERR sk_wakeup_task(ID id) {
+    TaskControlBlock* tcb;
+    UINT interrupt_status;
+    ERR err = E_OK;
+
+    if (id <= 0 || id > MAX_TASK_ID)
+        return E_ID;
+
+    DI(interrupt_status);
+    tcb = &tcb_table[id - 1];
+    if ((tcb->state == TS_WAIT) && (tcb->wait_factor == TWFCT_SLP)) {
+
+        task_queue_remove_entry(&wait_queue, tcb);
+
+        tcb->state = TS_READY;
+        tcb->wait_factor = TWFCT_NON;
+
+        task_queue_add_entry(&ready_queue[tcb->task_pri], tcb);
+        scheduler();
+    } else if (tcb->state == TS_READY || tcb->state == TS_WAIT) {
+        tcb->wakeup_count++;
+    } else {
+        err = E_OBJ;
+    }
+
+    EI(interrupt_status);
+    return err;
+}

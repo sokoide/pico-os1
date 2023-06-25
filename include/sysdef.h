@@ -155,6 +155,7 @@
 
 #define TMCLK_MHz (125)
 #define TMCLK_KHz (TMCLK_MHz * 1000)
+// timer: every 10ms
 #define TIMER_PERIOD (10)
 
 #define KHz (1000)
