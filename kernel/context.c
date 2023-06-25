@@ -1,4 +1,4 @@
-#include <knldef.h>
+#include <kerneldef.h>
 #include <sysdef.h>
 #include <syslib.h>
 #include <typedef.h>
@@ -17,12 +17,12 @@ void* make_context(UW* sp, UINT ssize, void (*fp)()) {
     StackFrame* sfp;
 
     // sfp -> execution context pointer
-    sfp = (StackFrame*)((UW)sp + ssize);
+    sfp = (StackFrame*)((uintptr_t)sp + ssize);
     sfp--;
 
     // init execution context pointer
     sfp->xpsr = 0x01000000;
-    sfp->pc = (UW)fp & ~0x00000001UL;
+    sfp->pc = (uintptr_t)fp & ~0x00000001UL;
 
     return (void*)sfp;
 }

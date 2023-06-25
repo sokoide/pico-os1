@@ -1,5 +1,6 @@
-﻿#ifndef SYSDEF_H
-#define SYSDEF_H
+﻿#ifndef _SYSDEF_H_
+#define _SYSDEF_H_
+
 /*
  * https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf
  * -> Address Map
@@ -167,4 +168,4 @@
 #define INTLEVEL_2 (0x80)
 #define INTLEVEL_3 (0xC0)
 
-#endif /* SYSDEF_H */
+#endif

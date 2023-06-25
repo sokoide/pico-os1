@@ -1,5 +1,6 @@
-#include <kernel.h>
-#include <knldef.h>
+#include <kerneldef.h>
+#include <sysdef.h>
+#include <typedef.h>
 
 void tm_com_init(void) {
     // https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/hardware_uart/uart.c#L128C1-L155C1

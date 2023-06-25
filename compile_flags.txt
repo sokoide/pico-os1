@@ -1,7 +1,8 @@
+--target=arm-none-eabi
 -O0
 -ffreestanding
 -MMD
 -MP
 -I.
--Iinclude
+-I./include
 -std=c99

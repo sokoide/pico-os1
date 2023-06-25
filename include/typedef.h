@@ -1,8 +1,5 @@
-﻿#ifndef TYPEDEF_H
-#define TYPEDEF_H
-/*
- * Data Types
- */
+﻿#ifndef _TYPEDEF_H_
+#define _TYPEDEF_H_
 
 #include <stdint.h>
 
@@ -51,4 +48,4 @@ typedef UINT BOOL;
 #define TRUE (1)  /* True */
 #define FALSE (0) /* False */
 
-#endif /* TYPEDEF_H */
+#endif
