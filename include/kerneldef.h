@@ -8,6 +8,7 @@
 #define MAX_TASK_ID 32
 #define MAX_TASK_PRI 16
 #define MAX_FLAG_ID 8
+#define MAX_SEMAPHORE_ID 8
 
 /* enums */
 typedef enum {
@@ -22,6 +23,7 @@ typedef enum {
     TWFCT_DLY = 1, // waited by sk_dly_tsk
     TWFCT_SLP = 2, // waited by sk_slp_tsk
     TWFCT_FLG = 3, // waited by sk_wait_flag
+    TWFCT_SEM = 4, // waited by sk_wait_semaphore
 } TaskWaitFactor;
 
 typedef enum { KS_NONEXIST = 0, KS_EXIST = 1 } KernelState;
@@ -51,12 +53,21 @@ typedef struct _task_control_block {
     UINT wait_pattern;
     UINT wait_mode;
     UINT* p_flag_pattern; // flag pattern when wait canceled
+
+    // semaphore wait info
+    INT wait_semaphore;
 } TaskControlBlock;
 
 typedef struct {
     KernelState state;
     UINT pattern;
 } FlagControlBlock;
+
+typedef struct {
+    KernelState state;
+    INT value;
+    INT max_value;
+} SemaphoreControlBlock;
 
 /* global variables */
 extern TaskControlBlock tcb_table[];

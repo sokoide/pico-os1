@@ -12,27 +12,39 @@ ID t1, t2, t3;
 ID fid;
 FlagInfo fi;
 
+// semaphore
+ID sid;
+Semaphore sem;
+
 void task_1(INT stacd, void* exinf) {
+    sk_wait_semaphore(sid, 1, TMO_FEVR);
     tm_putstring("task1 started...\r\n");
+    sk_signal_semaphore(sid, 1);
     /* for (INT i = 0; i < 5000; i++) { */
     /*     tm_putstring("task1 looping...\r\n"); */
     /*     sk_delay_task(200); */
     /* } */
     while (1) {
+        sk_wait_semaphore(sid, 1, TMO_FEVR);
         tm_putstring("task1...\r\n");
+        sk_signal_semaphore(sid, 1);
     }
     tm_putstring("task1 exitting...\r\n");
     sk_exit_task();
 }
 
 void task_2(INT stacd, void* exinf) {
+    sk_wait_semaphore(sid, 1, TMO_FEVR);
     tm_putstring("task2 started...\r\n");
+    sk_signal_semaphore(sid, 1);
     /* for (INT i = 0; i < 10000; i++) { */
     /*     tm_putstring("task2 looping...\r\n"); */
     /*     sk_delay_task(100); */
     /* } */
     while (1) {
+        sk_wait_semaphore(sid, 1, TMO_FEVR);
         tm_putstring("task2...\r\n");
+        sk_signal_semaphore(sid, 1);
     }
     tm_putstring("task2 exitting...\r\n");
     sk_exit_task();
@@ -98,6 +110,10 @@ void task_led2(INT stacd, void* exinf) {
 }
 
 void preemptive_multi_tasking() {
+    sem.attr = TA_TFIFO | TA_FIRST;
+    sem.initial_value = 1;
+    sem.max_value = 1;
+    sid = sk_create_semaphore(&sem);
     sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_1, 10,
                        sizeof(stack_task1), &stack_task1);
     sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_2, 10,
@@ -142,8 +158,8 @@ int usermain(void) {
     tm_putstring("usermain started...\r\n");
 
     // enable only one of below
-    /* preemptive_multi_tasking(); */
-    sleep_wake();
+    preemptive_multi_tasking();
+    /* sleep_wake(); */
     /* events(); */
 
     tm_putstring("usermain exitting...\r\n");

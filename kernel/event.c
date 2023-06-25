@@ -1,7 +1,9 @@
 #include <kernel.h>
 
 FlagControlBlock fcb_table[MAX_FLAG_ID];
+SemaphoreControlBlock scb_table[MAX_SEMAPHORE_ID];
 
+// events
 ID sk_create_flag(const FlagInfo* info) {
     ID flgid;
     UINT interrupt_status;
@@ -134,6 +136,107 @@ ERR sk_wait_flag(ID flgid, UINT wait_pattern, UINT wait_mode,
         err = E_NOEXS;
     }
 
+    EI(interrupt_status);
+    return err;
+}
+
+// semaphore
+ID sk_create_semaphore(const Semaphore* sem) {
+    ID semid;
+    UINT interrupt_status;
+
+    DI(interrupt_status);
+    for (semid = 0; scb_table[semid].state != KS_NONEXIST; semid++)
+        ;
+
+    if (semid < MAX_SEMAPHORE_ID) {
+        scb_table[semid].state = KS_EXIST;
+        scb_table[semid].value = sem->initial_value;
+        scb_table[semid].max_value = sem->max_value;
+        semid++;
+    } else {
+        semid = E_LIMIT;
+    }
+    EI(interrupt_status);
+    return semid;
+}
+
+ERR sk_signal_semaphore(ID semid, INT cnt) {
+    SemaphoreControlBlock* scb;
+    TaskControlBlock* tcb;
+    ERR err = E_OK;
+    UINT interrupt_status;
+
+    if (semid <= 0 || semid > MAX_SEMAPHORE_ID)
+        return E_ID;
+
+    DI(interrupt_status);
+    scb = &scb_table[--semid];
+    if (scb->state == KS_EXIST) {
+        scb->value += cnt; // return resource
+        if (scb->value <= scb->max_value) {
+            for (tcb = wait_queue; tcb != NULL; tcb = tcb->next) {
+                if (tcb->wait_factor == TWFCT_SEM) {
+                    if (scb->value >= tcb->wait_semaphore) {
+                        scb->value -= tcb->wait_semaphore;
+                        task_queue_remove_entry(&wait_queue, tcb);
+
+                        tcb->state = TS_READY;
+                        tcb->wait_factor = TWFCT_NON;
+                        tcb->wait_err = &err;
+
+                        task_queue_add_entry(&ready_queue[tcb->task_pri], tcb);
+                        scheduler();
+                    } else {
+                        break;
+                    }
+                }
+            }
+        } else { // resource value > max_value
+            scb->value -= cnt;
+            err = E_QOVR;
+        }
+    } else {
+        err = E_NOEXS; // unregistered semaphore
+    }
+    EI(interrupt_status);
+    return err;
+}
+
+ERR sk_wait_semaphore(ID semid, INT cnt, TIMEOUT timeout) {
+    SemaphoreControlBlock* scb;
+    ERR err = E_OK;
+    UINT interrupt_status;
+
+    if (semid <= 0 || semid > MAX_SEMAPHORE_ID)
+        return E_ID;
+
+    DI(interrupt_status);
+    scb = &scb_table[--semid];
+    if (scb->state == KS_EXIST) {
+        if (scb->value >= cnt) {
+            scb->value -= cnt;
+        } else if (timeout == TMO_POL) {
+            // no enough resouce, no wait
+            err = E_TMOUT;
+        } else {
+            // no enough resource, wait
+            task_queue_remove_top(&ready_queue[curr_task->task_pri]);
+
+            curr_task->state = TS_WAIT;
+            curr_task->wait_factor = TWFCT_SEM;
+            // set waitt ime
+            curr_task->wait_time =
+                ((timeout == TMO_FEVR) ? timeout : timeout + TIMER_PERIOD);
+            curr_task->wait_semaphore = cnt;
+            curr_task->wait_err = &err;
+
+            task_queue_add_entry(&wait_queue, curr_task);
+            scheduler();
+        }
+    } else {
+        err = E_NOEXS; // unregistered semaphore
+    }
     EI(interrupt_status);
     return err;
 }

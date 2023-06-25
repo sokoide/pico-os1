@@ -49,6 +49,12 @@ typedef struct {
     UINT initial_value;
 } FlagInfo;
 
+typedef struct {
+    ATTR attr;
+    INT initial_value;
+    INT max_value;
+} Semaphore;
+
 /* API  */
 // task management
 extern void sk_create_taskinfo(TaskInfo* info, ATTR attr, FP task, PRI pri,
@@ -66,5 +72,8 @@ extern ERR sk_set_flag(ID flgid, UINT set_pattern);
 extern ERR sk_clear_flag(ID flgid, UINT clear_pattern);
 extern ERR sk_wait_flag(ID flgid, UINT wait_pattern, UINT wait_mode,
                         UINT* p_flag_pattern, TIMEOUT timeout);
-
+// semaphore
+extern ID sk_create_semaphore(const Semaphore* sem);
+extern ERR sk_signal_semaphore(ID semid, INT cnt);
+extern ERR sk_wait_semaphore(ID semid, INT cnt, TIMEOUT timeout);
 #endif
