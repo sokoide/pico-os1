@@ -32,13 +32,13 @@ typedef int INT;
 typedef unsigned int UINT;
 
 /* special types */
-typedef INT ID;    /* ID */
-typedef UW ATR;    /* attribute */
-typedef INT ER;    /* error code */
-typedef INT PRI;   /* priority */
-typedef W TMO;     /* timeout */
-typedef UW RELTIM; /* relative time */
-typedef W SZ;      /* size */
+typedef INT ID;     /* ID */
+typedef UW ATTR;    /* attribute */
+typedef INT ERR;    /* error code */
+typedef INT PRI;    /* priority */
+typedef W TIMEOUT;  /* timeout */
+typedef UW RELTIME; /* relative time */
+typedef W SZ;       /* size */
 
 typedef void (*FP)(); /* function pointer */
 

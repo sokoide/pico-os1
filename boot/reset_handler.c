@@ -184,9 +184,9 @@ static void init_systimer(void) {
 }
 
 void reset_handler(void) {
-    UINT intsts;
+    UINT interrupt_status;
 
-    DI(intsts);
+    DI(interrupt_status);
 
     /* PendSVC例外とSysTick例外の優先度設定 */
     out_w(SCB_SHPR3, (INTLEVEL_0 << 24) | (INTLEVEL_3 << 16));
@@ -196,7 +196,7 @@ void reset_handler(void) {
     init_section();
     init_systimer();
 
-    EI(intsts);
+    EI(interrupt_status);
 
     main();
     while (1)

@@ -1,15 +1,18 @@
 # Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
 ../kernel/syslib.c \
-../kernel/context.c
-
-OBJS += \
-./kernel/syslib.o \
-./kernel/context.o \
-./kernel/dispatch.o
+../kernel/context.c \
+../kernel/task_manager.c
 
 ASM_SRCS += \
 ../kernel/dispatch.s
+
+OBJS += \
+./kernel/dispatch.o \
+./kernel/syslib.o \
+./kernel/context.o \
+./kernel/task_manager.o
+
 
 
 # Each subdirectory must supply rules for building sources it contributes

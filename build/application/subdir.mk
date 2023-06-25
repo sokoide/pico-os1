@@ -4,10 +4,10 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
-../application/main.c
+../application/usermain.c
 
 OBJS += \
-./application/main.o
+./application/usermain.o
 
 
 # Each subdirectory must supply rules for building sources it contributes

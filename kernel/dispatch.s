@@ -4,6 +4,12 @@
 
 // called by the interrupt vector defined in boot/vector_table.c -> 14: Pend SV
 dispatch_entry:
+	// disable interrupt
+    mov		r0, #1
+    msr		primask, r0
+    ldr		r1, =dispatch_running
+    str		r0, [r1]
+
     // execution context -> stack
     push    {r4-r7}
     mov     r0, r8
@@ -13,31 +19,40 @@ dispatch_entry:
     push    {r0-r3}
 
     // check the current task
-    ldr     r0, =cur_task
+    ldr     r0, =curr_task
     ldr     r1, [r0]
     cmp     r1, #0
-    beq     disp_010    // if cur_task id == 0, goto disp_010
+    beq     disp_010    // if curr_task id == 0, goto disp_010
 
-    // sp register -> ctx_table
-    ldr     r0, =ctx_table
-    sub     r1, #1
-    lsl     r1, r1, #2
-    mov     r2, sp
-    str     r2, [r0, r1]
+
+	// execution context pointer -> current tasks's TaskControlBlock
+	mov r2, sp
+	str r2, [r1]
 
 disp_010:
-    // change the current task
-    ldr     r0, =next_task
-    ldr     r1, [r0]
-    ldr     r0, =cur_task
-    str     r1, [r0]
+	// get the next task
+	ldr r1, =scheduled_task
+	ldr r2, [r1]
+	cmp r2, #0
+	bne disp_030
 
-    // switch to a new stack
-    ldr     r0, =ctx_table
-    sub     r1, #1
-    lsl     r1, r1, #2
-    ldr     r2, [r0, r1]
-    mov     sp, r2
+	// if the next task doesn't exist
+	str r2, [r0]
+disp_020:
+    mov		r3, #0
+    msr		primask, r3 	// enable interrupt
+    mov		r3, #1
+    msr		primask, r3     // disable interrupt
+
+    ldr     r2, [r1]
+    cmp     r2, #0
+    beq     disp_020
+
+	// change the current task
+disp_030:
+    str     r2, [r0]
+    ldr     r0, [r2]
+    mov     sp, r0
 
     // restore execution context on stack
     pop    {r0-r3}
@@ -46,5 +61,12 @@ disp_010:
     mov    r9, r1
     mov    r8, r0
     pop    {r4-r7}
+
+// enable interrupt
+    ldr     r0, =dispatch_running
+    mov     r1, #0
+    str     r1, [r0]
+    msr     primask, r1
+
     bx    lr
 
