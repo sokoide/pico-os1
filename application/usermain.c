@@ -154,13 +154,44 @@ void events() {
     sk_start_task(t3, 0);
 }
 
+ID dd_i2c0, dd_i2c1; // I2Cデバイスディスクリプタ
+ID flgid_1;          // イベントフラグID
+extern ID tid_lcd;
+extern TaskInfo task_lcd;
+
+void device() {
+    FlagInfo cflg_1 = {
+        .initial_value = 0,
+    };
+
+    flgid_1 = sk_create_flag(&cflg_1);
+
+    dd_i2c0 = sk_opepn_device((UB*)"iica", TD_UPDATE);
+    if (dd_i2c0 < 0)
+        tm_putstring("Error I2C0\n");
+    else
+        tm_putstring("Open I2C0\n");
+
+    dd_i2c1 = sk_opepn_device((UB*)"iicb", TD_UPDATE);
+    if (dd_i2c1 < 0)
+        tm_putstring("Error I2C1\n");
+    else
+        tm_putstring("Open I2C1\n");
+
+    tid_lcd = sk_create_task(&task_lcd);
+    sk_start_task(tid_lcd, 0);
+
+    sk_sleep_task(TMO_FEVR);
+}
+
 int usermain(void) {
     tm_putstring("usermain started...\r\n");
 
     // enable only one of below
-    preemptive_multi_tasking();
+    /* preemptive_multi_tasking(); */
     /* sleep_wake(); */
     /* events(); */
+    device();
 
     tm_putstring("usermain exitting...\r\n");
     return 0;
