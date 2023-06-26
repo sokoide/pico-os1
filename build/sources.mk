@@ -12,5 +12,5 @@ OBJS :=
 SUBDIRS := \
 application \
 boot \
+device \
 kernel \
-

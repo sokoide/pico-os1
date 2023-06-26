@@ -7,7 +7,6 @@ SemaphoreControlBlock scb_table[MAX_SEMAPHORE_ID];
 ID sk_create_flag(const FlagInfo* info) {
     ID flgid;
     UINT interrupt_status;
-
     DI(interrupt_status);
     for (flgid = 0; fcb_table[flgid].state != KS_NONEXIST; flgid++)
         ;

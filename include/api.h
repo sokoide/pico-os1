@@ -32,6 +32,14 @@
 #define TWF_CLR 0x00000010U    // all bit clear
 #define TWF_BITCLR 0x00000020U // conditional bit clear
 
+// device
+#define TD_READ 0x0001U   // read only
+#define TD_WRITE 0x0002U  // write only
+#define TD_UPDATE 0x0003U // read write
+
+// I2C
+#define TDN_I2C_EXEC (-100) // 属性データ(拡張アクセス)
+
 /* structs */
 // ref:
 // https://github.com/tron-forum/mtkernel_3/blob/master/include/tk/syscall.h
@@ -55,6 +63,12 @@ typedef struct {
     INT max_value;
 } Semaphore;
 
+typedef struct {
+    UW sadr;  // スレーブアドレス
+    UB* sbuf; // 送信バッファ
+    UB* rbuf; // 受信バッファ
+} I2cExec;
+
 /* API  */
 // task management
 extern void sk_create_taskinfo(TaskInfo* info, ATTR attr, FP task, PRI pri,
@@ -76,4 +90,9 @@ extern ERR sk_wait_flag(ID flgid, UINT wait_pattern, UINT wait_mode,
 extern ID sk_create_semaphore(const Semaphore* sem);
 extern ERR sk_signal_semaphore(ID semid, INT cnt);
 extern ERR sk_wait_semaphore(ID semid, INT cnt, TIMEOUT timeout);
+
+// device
+ID sk_opepn_device(const UB* name, UINT open_mode);
+ERR sk_sync_read_device(ID dd, W start, void* buf, SZ size, SZ* asize);
+ERR sk_sync_write_device(ID dd, W start, const void* buf, SZ size, SZ* asize);
 #endif

@@ -6,6 +6,7 @@ RM := rm -rf
 -include sources.mk
 -include boot/subdir.mk
 -include application/subdir.mk
+-include device/subdir.mk
 -include kernel/subdir.mk
 -include subdir.mk
 -include objects.mk
