@@ -15,7 +15,7 @@ typedef struct {
 } DeviceInfo;
 
 #define DEVICE_NUM 3
-extern DeviceInfo dev_tbl[];
+extern DeviceInfo device_table[];
 
 // I2C
 extern ERR dev_i2c_open(UW unit, UINT omode);

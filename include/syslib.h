@@ -41,8 +41,8 @@ static inline UW get_primask(void) {
 }
 
 /* interrupts */
-#define DI(intsts) (intsts = get_primask(), set_primask(1))
-#define EI(intsts) (set_primask(intsts))
+#define DI(interrupt_status) (interrupt_status = get_primask(), set_primask(1))
+#define EI(interrupt_status) (set_primask(interrupt_status))
 
 /* serial */
 void tm_com_init(void);

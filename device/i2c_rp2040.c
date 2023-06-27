@@ -39,10 +39,14 @@ static void i2c_init(UW unit) {
         while ((in_w(RESETS_RESET_DONE) & (RESETS_RESET_I2C0)) == 0)
             ;
 
-        out_w(GPIO_CTRL(8), GPIO_CTRL_FUNCSEL_I2C);
-        out_w(GPIO(8), GPIO_IE | GPIO_DRIVE_4MA | GPIO_PUE | GPIO_SHEMITT);
-        out_w(GPIO_CTRL(9), GPIO_CTRL_FUNCSEL_I2C);
-        out_w(GPIO(9), GPIO_IE | GPIO_DRIVE_4MA | GPIO_PUE | GPIO_SHEMITT);
+        // out_w(GPIO_CTRL(8), GPIO_CTRL_FUNCSEL_I2C);
+        // out_w(GPIO(8), GPIO_IE | GPIO_DRIVE_4MA | GPIO_PUE | GPIO_SHEMITT);
+        // out_w(GPIO_CTRL(9), GPIO_CTRL_FUNCSEL_I2C);
+        // out_w(GPIO(9), GPIO_IE | GPIO_DRIVE_4MA | GPIO_PUE | GPIO_SHEMITT);
+        out_w(GPIO_CTRL(4), GPIO_CTRL_FUNCSEL_I2C);
+        out_w(GPIO(4), GPIO_IE | GPIO_DRIVE_4MA | GPIO_PUE | GPIO_SHEMITT);
+        out_w(GPIO_CTRL(5), GPIO_CTRL_FUNCSEL_I2C);
+        out_w(GPIO(5), GPIO_IE | GPIO_DRIVE_4MA | GPIO_PUE | GPIO_SHEMITT);
         break;
     case 1:
         set_w(RESETS_RESET, RESETS_RESET_I2C1);

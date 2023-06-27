@@ -1,4 +1,5 @@
-﻿#include <api.h>
+﻿#include "usermain.h"
+#include <api.h>
 
 // task
 #define STACK_SIZE 1024
@@ -15,6 +16,9 @@ FlagInfo fi;
 // semaphore
 ID sid;
 Semaphore sem;
+
+// I2C
+ID dd_i2c0, dd_i2c1;
 
 void task_1(INT stacd, void* exinf) {
     sk_wait_semaphore(sid, 1, TMO_FEVR);
@@ -154,29 +158,18 @@ void events() {
     sk_start_task(t3, 0);
 }
 
-ID dd_i2c0, dd_i2c1; // I2Cデバイスディスクリプタ
-ID flgid_1;          // イベントフラグID
-extern ID tid_lcd;
-extern TaskInfo task_lcd;
-
 void device() {
-    FlagInfo cflg_1 = {
-        .initial_value = 0,
-    };
-
-    flgid_1 = sk_create_flag(&cflg_1);
-
     dd_i2c0 = sk_opepn_device((UB*)"iica", TD_UPDATE);
     if (dd_i2c0 < 0)
-        tm_putstring("Error I2C0\n");
+        tm_putstring("Error I2C0\r\n");
     else
-        tm_putstring("Open I2C0\n");
+        tm_putstring("Open I2C0\r\n");
 
     dd_i2c1 = sk_opepn_device((UB*)"iicb", TD_UPDATE);
     if (dd_i2c1 < 0)
-        tm_putstring("Error I2C1\n");
+        tm_putstring("Error I2C1\r\n");
     else
-        tm_putstring("Open I2C1\n");
+        tm_putstring("Open I2C1\r\n");
 
     tid_lcd = sk_create_task(&task_lcd);
     sk_start_task(tid_lcd, 0);
