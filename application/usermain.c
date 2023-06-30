@@ -191,7 +191,7 @@ int usermain(void) {
     /* preemptive_multi_tasking(); */
     /* sleep_wake(); */
     /* events(); */
-    device();
+    /* device(); */
 
     printf("usermain exitting...\r\n");
     return 0;
