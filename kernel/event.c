@@ -1,7 +1,7 @@
 #include <kernel.h>
 
 FlagControlBlock fcb_table[MAX_FLAGS];
-SemaphoreControlBlock scb_table[MAX_SEMAPHORE_ID];
+SemaphoreControlBlock scb_table[MAX_SEMAPHORES];
 
 // events
 ID sk_create_flag(const FlagInfo* info) {
@@ -148,7 +148,7 @@ ID sk_create_semaphore(const Semaphore* sem) {
     for (semid = 0; scb_table[semid].state != KS_NONEXIST; semid++)
         ;
 
-    if (semid < MAX_SEMAPHORE_ID) {
+    if (semid < MAX_SEMAPHORES) {
         scb_table[semid].state = KS_EXIST;
         scb_table[semid].value = sem->initial_value;
         scb_table[semid].max_value = sem->max_value;
@@ -166,7 +166,7 @@ ERR sk_signal_semaphore(ID semid, INT cnt) {
     ERR err = E_OK;
     UINT interrupt_status;
 
-    if (semid <= 0 || semid > MAX_SEMAPHORE_ID)
+    if (semid <= 0 || semid > MAX_SEMAPHORES)
         return E_ID;
 
     DI(interrupt_status);
@@ -207,7 +207,7 @@ ERR sk_wait_semaphore(ID semid, INT cnt, TIMEOUT timeout) {
     ERR err = E_OK;
     UINT interrupt_status;
 
-    if (semid <= 0 || semid > MAX_SEMAPHORE_ID)
+    if (semid <= 0 || semid > MAX_SEMAPHORES)
         return E_ID;
 
     DI(interrupt_status);

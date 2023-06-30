@@ -1,4 +1,5 @@
 #include <kernel.h>
+#include <stdio.h>
 
 TaskControlBlock tcb_table[MAX_TASKS];
 TaskControlBlock* ready_queue[MAX_TASK_PRI];
@@ -96,7 +97,7 @@ void scheduler(void) {
 
 void initial_task_func(INT stacd /* not used */, void* exinf /* not used */) {
     tm_com_init();
-    tm_putstring("initial task started.\r\n");
+    printf("initial task started.\r\n");
 
     usermain();
     sk_exit_task();

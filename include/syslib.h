@@ -52,6 +52,5 @@ static inline UW get_sp(void) {
 
 /* serial */
 void tm_com_init(void);
-UINT tm_putstring(char* str);
 
 #endif

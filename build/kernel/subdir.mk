@@ -4,7 +4,8 @@ C_SRCS += \
 ../kernel/context.c \
 ../kernel/task_manager.c \
 ../kernel/systimer.c \
-../kernel/event.c
+../kernel/event.c \
+../kernel/syscalls.c
 
 ASM_SRCS += \
 ../kernel/dispatch.s
@@ -15,7 +16,8 @@ OBJS += \
 ./kernel/context.o \
 ./kernel/task_manager.o \
 ./kernel/systimer.o \
-./kernel/event.o
+./kernel/event.o \
+./kernel/syscalls.o
 
 
 
@@ -33,5 +35,3 @@ kernel/%.o: ../kernel/%.s kernel/subdir.mk
 	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -ffreestanding -g3 -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
-
-

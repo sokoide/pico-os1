@@ -10,7 +10,8 @@
 #define SRAM_SIZE (256 * 1024)
 
 // stack
-#define INITIAL_SP (SRAM_BASE + SRAM_SIZE)
+#define INITIAL_STACK_SIZE (256)
+#define INITIAL_STACK_BASE (SRAM_BASE + SRAM_SIZE)
 
 /* APB Peripherals */
 /* Clock */

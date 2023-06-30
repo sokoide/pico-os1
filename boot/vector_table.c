@@ -12,7 +12,7 @@ void default_handler(void) {
 
 /* exception vector table */
 void (*const vector_tbl[])() __attribute__((section(".vector"))) = {
-    (void (*)())(INITIAL_SP), // 0: Top of Stack
+    (void (*)())(INITIAL_STACK_BASE), // 0: Top of Stack
     reset_handler,            // 1: Reset
     default_handler,          // 2: NMI
     default_handler,          // 3: Hard Fault

@@ -1,69 +1,27 @@
-#include <_ansi.h>
-#include <errno.h>
-#include <reent.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <sys/fcntl.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/times.h>
-#include <sys/types.h>
-#include <time.h>
-
+#include <syscalls.h>
 #include <kernel.h>
 
-extern const void* __data_org;
-extern const void* __data_start;
-extern const void* __data_end;
-extern const void* __bss_start;
 extern const void* __bss_end;
 
 uint8_t* heap_end = (uint8_t*)&__bss_end;
 uint8_t* prev_heap_end;
 
-/* Forward prototypes.  */
-int _system (const char*);
-int _rename (const char*, const char*);
-int isatty (int);
-clock_t _times (struct tms*);
-int _gettimeofday (struct timeval*, struct timezone*);
-void _raise (void);
-int _unlink (void);
-int _link (void);
-int _stat (const char*, struct stat*);
-int _fstat (int, struct stat*);
-caddr_t _sbrk (int);
-int _getpid (int);
-int _kill (int, int);
-void _exit (int);
-int _close (int);
-int _open (const char*, int, ...);
-int _write (int, char*, int);
-int _lseek (int, int, int);
-int _read (int, char*, int);
-void initialise_monitor_handles (void);
-
-// static int
-// remap_handle (int fh)
-//{
-// return 0;
-//}
+static int remap_handle(int fh) {
+    // TODO:
+    return 0;
+}
 
 void initialise_monitor_handles(void) {}
 
-// [Caution]: printf will stop working if you comment below out
-// static int
-// get_errno (void)
-// {
-//     return(0);
-// }
+static int get_errno(void) {
+    // TODO:
+    return (0);
+}
 
-// static int
-// error (int result)
-// {
-//   errno = get_errno ();
-//   return result;
-// }
+static int error(int result) {
+    errno = get_errno();
+    return result;
+}
 
 int _read(int file, char* ptr, int len) {
     // TODO:
@@ -76,7 +34,7 @@ int _lseek(int file, int ptr, int dir) {
 }
 
 int _write(int file, char* ptr, int len) {
-    for(int i=0;i<len;i++){
+    for (int i = 0; i < len; i++) {
         while ((in_w(UART0_BASE + UARTx_FR) & UART_FR_TXFF) != 0)
             ; /* wait for outgoing FIFO queue */
         out_w(UART0_BASE + UARTx_DR, *ptr++);

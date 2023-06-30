@@ -19,94 +19,94 @@ ID dd_i2c0, dd_i2c1;
 
 void task_1(INT stacd, void* exinf) {
     sk_wait_semaphore(sid, 1, TMO_FEVR);
-    tm_putstring("task1 started...\r\n");
+    printf("task1 started...\r\n");
     sk_signal_semaphore(sid, 1);
     /* for (INT i = 0; i < 5000; i++) { */
-    /*     tm_putstring("task1 looping...\r\n"); */
+    /*     printf("task1 looping...\r\n"); */
     /*     sk_delay_task(200); */
     /* } */
     while (1) {
         sk_wait_semaphore(sid, 1, TMO_FEVR);
-        tm_putstring("task1...\r\n");
+        printf("task1...\r\n");
         sk_signal_semaphore(sid, 1);
     }
-    tm_putstring("task1 exitting...\r\n");
+    printf("task1 exitting...\r\n");
     sk_exit_task();
 }
 
 void task_2(INT stacd, void* exinf) {
     sk_wait_semaphore(sid, 1, TMO_FEVR);
-    tm_putstring("task2 started...\r\n");
+    printf("task2 started...\r\n");
     sk_signal_semaphore(sid, 1);
     /* for (INT i = 0; i < 10000; i++) { */
-    /*     tm_putstring("task2 looping...\r\n"); */
+    /*     printf("task2 looping...\r\n"); */
     /*     sk_delay_task(100); */
     /* } */
     while (1) {
         sk_wait_semaphore(sid, 1, TMO_FEVR);
-        tm_putstring("task2...\r\n");
+        printf("task2...\r\n");
         sk_signal_semaphore(sid, 1);
     }
-    tm_putstring("task2 exitting...\r\n");
+    printf("task2 exitting...\r\n");
     sk_exit_task();
 }
 
 void task_waker(INT stacd, void* exinf) {
-    tm_putstring("waker started...\r\n");
+    printf("waker started...\r\n");
     while (1) {
-        tm_putstring("waker sleeping...\r\n");
+        printf("waker sleeping...\r\n");
         sk_delay_task(1000);
-        tm_putstring("waker waking sleeper...\r\n");
+        printf("waker waking sleeper...\r\n");
         sk_wakeup_task(t2);
     }
-    tm_putstring("waker exitting...\r\n");
+    printf("waker exitting...\r\n");
     sk_exit_task();
 }
 
 void task_sleeper(INT stacd, void* exinf) {
-    tm_putstring("sleeper started...\r\n");
+    printf("sleeper started...\r\n");
     while (1) {
-        tm_putstring("sleeper sleeping...\r\n");
+        printf("sleeper sleeping...\r\n");
         sk_sleep_task(TMO_FEVR);
-        tm_putstring("sleeper woke up\r\n");
+        printf("sleeper woke up\r\n");
     }
-    tm_putstring("sleeper exitting...\r\n");
+    printf("sleeper exitting...\r\n");
     sk_exit_task();
 }
 
 void task_button(INT stacd, void* exinf) {
-    tm_putstring("task_button started...\r\n");
+    printf("task_button started...\r\n");
     while (1) {
-        tm_putstring("task_button: btn-1 on\r\n");
+        printf("task_button: btn-1 on\r\n");
         sk_set_flag(fid, (1 << 0));
         sk_delay_task(500);
-        tm_putstring("task_button: btn-2 on\r\n");
+        printf("task_button: btn-2 on\r\n");
         sk_set_flag(fid, (1 << 1));
         sk_delay_task(1000);
     }
-    tm_putstring("task_button exitting...\r\n");
+    printf("task_button exitting...\r\n");
     sk_exit_task();
 }
 
 void task_led1(INT stacd, void* exinf) {
-    tm_putstring("task_led1 started...\r\n");
+    printf("task_led1 started...\r\n");
     UINT pattern;
     while (1) {
         sk_wait_flag(fid, (1 << 0), TWF_ANDW | TWF_BITCLR, &pattern, TMO_FEVR);
-        tm_putstring("task_led1: flagged\r\n");
+        printf("task_led1: flagged\r\n");
     }
-    tm_putstring("task_led1 exitting...\r\n");
+    printf("task_led1 exitting...\r\n");
     sk_exit_task();
 }
 
 void task_led2(INT stacd, void* exinf) {
-    tm_putstring("task_led2 started...\r\n");
+    printf("task_led2 started...\r\n");
     UINT pattern;
     while (1) {
         sk_wait_flag(fid, (1 << 1), TWF_ANDW | TWF_BITCLR, &pattern, TMO_FEVR);
-        tm_putstring("task_led2: flagged\r\n");
+        printf("task_led2: flagged\r\n");
     }
-    tm_putstring("task_led2 exitting...\r\n");
+    printf("task_led2 exitting...\r\n");
     sk_exit_task();
 }
 
@@ -158,13 +158,13 @@ void events() {
 void device() {
     dd_i2c0 = sk_open_device((UB*)"iica", TD_UPDATE);
     if (dd_i2c0 < 0)
-        tm_putstring("Error I2C0\r\n");
+        printf("Error I2C0\r\n");
     else
         printf("Open I2C0\r\n");
 
     dd_i2c1 = sk_open_device((UB*)"iicb", TD_UPDATE);
     if (dd_i2c1 < 0)
-        tm_putstring("Error I2C1\r\n");
+        printf("Error I2C1\r\n");
     else
         printf("Open I2C1\r\n");
 
@@ -175,8 +175,8 @@ void device() {
 }
 
 int usermain(void) {
-    tm_putstring("hello\r\n");
-    tm_putstring("usermain started...\r\n");
+    printf("hello\r\n");
+    printf("usermain started...\r\n");
     printf("hello\r\n");
     printf("usermain started...\r\n");
 
@@ -193,6 +193,6 @@ int usermain(void) {
     /* events(); */
     device();
 
-    tm_putstring("usermain exitting...\r\n");
+    printf("usermain exitting...\r\n");
     return 0;
 }
