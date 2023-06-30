@@ -15,7 +15,7 @@ static BOOL nm_cmp(const UB* nm1, const UB* nm2) {
     return (*nm1 == 0) ? TRUE : FALSE;
 }
 
-ID sk_opepn_device(const UB* name, UINT open_mode) {
+ID sk_open_device(const UB* name, UINT open_mode) {
     UINT interrupt_status;
     INT i;
     ERR err;
@@ -50,8 +50,8 @@ ERR sk_sync_read_device(ID dd, W start, void* buf, SZ size, SZ* asize) {
     if ((device_table[dd].open_mode & TD_READ) == 0)
         return E_OACV;
 
-    err =
-        (*device_table[dd].fn_sync_read)(device_table[dd].unit, start, buf, size, asize);
+    err = (*device_table[dd].fn_sync_read)(device_table[dd].unit, start, buf,
+                                           size, asize);
 
     return err;
 }
@@ -66,8 +66,8 @@ ERR sk_sync_write_device(ID dd, W start, const void* buf, SZ size, SZ* asize) {
     if ((device_table[dd].open_mode & TD_WRITE) == 0)
         return E_OACV;
 
-    err =
-        (*device_table[dd].fn_sync_write)(device_table[dd].unit, start, buf, size, asize);
+    err = (*device_table[dd].fn_sync_write)(device_table[dd].unit, start, buf,
+                                            size, asize);
 
     return err;
 }

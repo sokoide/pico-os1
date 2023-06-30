@@ -42,7 +42,7 @@ inline static void ssd1306_write(ssd1306_t* p, uint8_t val) {
     fancy_write(p->i2c_i, p->address, d, 2);
 }
 
-char ssd1306_init(ssd1306_t* p, uint16_t width, uint16_t height,
+BOOL ssd1306_init(ssd1306_t* p, uint16_t width, uint16_t height,
                   uint8_t address, ID i2c_instance, uint8_t* buffer) {
     p->width = width;
     p->height = height;
@@ -84,7 +84,7 @@ char ssd1306_init(ssd1306_t* p, uint16_t width, uint16_t height,
     for (SZ i = 0; i < sizeof(cmds); ++i)
         ssd1306_write(p, cmds[i]);
 
-    return 1;
+    return TRUE;
 }
 
 inline void ssd1306_poweroff(ssd1306_t* p) {

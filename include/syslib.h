@@ -11,7 +11,7 @@
 // static inline UW in_w(UW adr) { return *(_UW*)adr; }
 static inline UW in_w(uintptr_t adr) { return *(_UW*)adr; }
 
-__attribute__((unused)) static inline void out_w(uintptr_t adr, UW data) {
+static inline void out_w(uintptr_t adr, UW data) {
     *(_UW*)adr = data;
 }
 
@@ -38,6 +38,12 @@ static inline UW get_primask(void) {
     UW pm;
     __asm__ volatile("mrs %0, primask" : "=r"(pm));
     return pm;
+}
+
+static inline UW get_sp(void) {
+    UW sp;
+    __asm__ volatile("mov %0, sp" : "=r"(sp));
+    return sp;
 }
 
 /* interrupts */

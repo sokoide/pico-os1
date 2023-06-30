@@ -42,8 +42,6 @@ typedef W SZ;       /* size */
 
 typedef void (*FP)(); /* function pointer */
 
-#define NULL (0)
-
 typedef UINT BOOL;
 #define TRUE (1)  /* True */
 #define FALSE (0) /* False */

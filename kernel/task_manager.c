@@ -1,33 +1,32 @@
 #include <kernel.h>
 
-TaskControlBlock tcb_table[MAX_TASK_ID];
+TaskControlBlock tcb_table[MAX_TASKS];
 TaskControlBlock* ready_queue[MAX_TASK_PRI];
 TaskControlBlock* curr_task;
 TaskControlBlock* scheduled_task;
 TaskControlBlock* wait_queue;
 UW dispatch_running = 0;
 
-ID initial_task_id;
-UB stack_initialtask[256];
+ID main_task_id;
 void initial_task_func(INT stacd, void* exinf);
 
-TaskInfo initial_task = {
+TaskInfo main_task = {
     .task_attr = TA_HLNG | TA_RNG0 | TA_USERBUF,
     .task = initial_task_func,
     .task_pri = 1,
-    .stack_size = sizeof(stack_initialtask),
-    .stack = stack_initialtask,
+    .stack_size = MAIN_TASK_STACK_SIZE,
+    .stack = TASK_STACK_BASE_N(3),
 };
 
 // internal functions
 int main(void) {
     // initialize tcb_table
-    for (INT i = 0; i < MAX_TASK_ID; i++) {
+    for (INT i = 0; i < MAX_TASKS; i++) {
         tcb_table[i].state = TS_NONEXIST;
     }
 
-    initial_task_id = sk_create_task(&initial_task);
-    sk_start_task(initial_task_id, 0);
+    main_task_id = sk_create_task(&main_task);
+    sk_start_task(main_task_id, 0);
 
     while (1)
         ; // never reaches here
@@ -127,14 +126,14 @@ ID sk_create_task(const TaskInfo* ti) {
 
     DI(interrupt_status);
 
-    for (i = 0; i < MAX_TASK_ID; i++) {
+    for (i = 0; i < MAX_TASKS; i++) {
         // find unused TCB
         if (tcb_table[i].state == TS_NONEXIST)
             break;
     }
 
     // init tcb_table
-    if (i < MAX_TASK_ID) {
+    if (i < MAX_TASKS) {
         tcb_table[i].state = TS_DORMANT;
         tcb_table[i].prev = NULL;
         tcb_table[i].next = NULL;
@@ -158,7 +157,7 @@ ERR sk_start_task(ID id, INT stacd /* not used */) {
     UINT interrupt_status;
     ERR err = E_OK;
 
-    if (id <= 0 || id > MAX_TASK_ID)
+    if (id <= 0 || id > MAX_TASKS)
         return E_ID;
     DI(interrupt_status);
 
@@ -237,7 +236,7 @@ ERR sk_wakeup_task(ID id) {
     UINT interrupt_status;
     ERR err = E_OK;
 
-    if (id <= 0 || id > MAX_TASK_ID)
+    if (id <= 0 || id > MAX_TASKS)
         return E_ID;
 
     DI(interrupt_status);

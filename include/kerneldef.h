@@ -1,14 +1,25 @@
 ﻿#ifndef _KERNELDEF_H_
 #define _KERNELDEF_H_
 
+#include <stddef.h>
+
 #include "syslib.h"
 #include "typedef.h"
+#include "sysdef.h"
 
 /* constants */
-#define MAX_TASK_ID 32
+#define MAX_TASKS 32
 #define MAX_TASK_PRI 16
-#define MAX_FLAG_ID 8
+#define MAX_FLAGS 8
 #define MAX_SEMAPHORE_ID 8
+// used by the initial boot before calling the first sk_create_task
+#define INITIAL_STACK_SIZE (256)
+#define MAIN_TASK_STACK_SIZE (4096)
+#define MAIN_TASK_STACK_BASE (void*)(INITIAL_SP - INITIAL_STACK_SIZE)
+#define TASK_STACK_SIZE (1024)
+#define TASK_STACK_BASE (MAIN_TASK_STACK_BASE - MAIN_TASK_STACK_SIZE)
+#define TASK_STACK_UPPER_LIMIT (TASK_STACK_BASE - TASK_STACK_SIZE * MAX_TASKS)
+#define TASK_STACK_BASE_N(X)  (void*)(TASK_STACK_BASE - TASK_STACK_SIZE * X)
 
 /* enums */
 typedef enum {

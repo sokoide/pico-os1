@@ -1,11 +1,8 @@
 ﻿#include "usermain.h"
 #include <api.h>
+#include <stdio.h>
 
 // task
-#define STACK_SIZE 1024
-UB stack_task1[STACK_SIZE];
-UB stack_task2[STACK_SIZE];
-UB stack_task3[STACK_SIZE];
 TaskInfo task1, task2, task3;
 ID t1, t2, t3;
 
@@ -119,9 +116,9 @@ void preemptive_multi_tasking() {
     sem.max_value = 1;
     sid = sk_create_semaphore(&sem);
     sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_1, 10,
-                       sizeof(stack_task1), &stack_task1);
+                       TASK_STACK_SIZE, TASK_STACK_BASE_N(0));
     sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_2, 10,
-                       sizeof(stack_task2), &stack_task2);
+                       TASK_STACK_SIZE, TASK_STACK_BASE_N(1));
     t1 = sk_create_task(&task1);
     t2 = sk_create_task(&task2);
     sk_start_task(t1, 0);
@@ -130,9 +127,9 @@ void preemptive_multi_tasking() {
 
 void sleep_wake() {
     sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_waker, 10,
-                       sizeof(stack_task1), &stack_task1);
+                       TASK_STACK_SIZE, TASK_STACK_BASE_N(0));
     sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_sleeper, 10,
-                       sizeof(stack_task2), &stack_task2);
+                       TASK_STACK_SIZE, TASK_STACK_BASE_N(1));
     t1 = sk_create_task(&task1);
     t2 = sk_create_task(&task2);
     sk_start_task(t1, 0);
@@ -145,11 +142,11 @@ void events() {
     fid = sk_create_flag(&fi);
 
     sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_button, 10,
-                       sizeof(stack_task1), &stack_task1);
+                       TASK_STACK_SIZE, TASK_STACK_BASE_N(0));
     sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_led1, 10,
-                       sizeof(stack_task2), &stack_task2);
+                       TASK_STACK_SIZE, TASK_STACK_BASE_N(1));
     sk_create_taskinfo(&task3, TA_HLNG | TA_RNG3 | TA_USERBUF, task_led2, 10,
-                       sizeof(stack_task3), &stack_task3);
+                       TASK_STACK_SIZE, TASK_STACK_BASE_N(2));
     t1 = sk_create_task(&task1);
     t2 = sk_create_task(&task2);
     t3 = sk_create_task(&task3);
@@ -159,17 +156,17 @@ void events() {
 }
 
 void device() {
-    dd_i2c0 = sk_opepn_device((UB*)"iica", TD_UPDATE);
+    dd_i2c0 = sk_open_device((UB*)"iica", TD_UPDATE);
     if (dd_i2c0 < 0)
         tm_putstring("Error I2C0\r\n");
     else
-        tm_putstring("Open I2C0\r\n");
+        printf("Open I2C0\r\n");
 
-    dd_i2c1 = sk_opepn_device((UB*)"iicb", TD_UPDATE);
+    dd_i2c1 = sk_open_device((UB*)"iicb", TD_UPDATE);
     if (dd_i2c1 < 0)
         tm_putstring("Error I2C1\r\n");
     else
-        tm_putstring("Open I2C1\r\n");
+        printf("Open I2C1\r\n");
 
     tid_lcd = sk_create_task(&task_lcd);
     sk_start_task(tid_lcd, 0);
@@ -178,7 +175,17 @@ void device() {
 }
 
 int usermain(void) {
+    tm_putstring("hello\r\n");
     tm_putstring("usermain started...\r\n");
+    printf("hello\r\n");
+    printf("usermain started...\r\n");
+
+    printf("TASK_STACK_UPPER_LIMIT: 0x%08X\r\n", TASK_STACK_UPPER_LIMIT);
+    printf("MAIN_TASK_STACK_BASE: 0x%08X\r\n", MAIN_TASK_STACK_BASE);
+    printf("MAIN_TASK SP: 0x%08X\r\n", get_sp());
+    for (int i = 0; i < MAX_TASKS; i++) {
+        printf("TASK_STACK_BASE_N[%02d]: 0x%08X\r\n", i, TASK_STACK_BASE_N(i));
+    }
 
     // enable only one of below
     /* preemptive_multi_tasking(); */

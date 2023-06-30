@@ -92,7 +92,7 @@ extern ERR sk_signal_semaphore(ID semid, INT cnt);
 extern ERR sk_wait_semaphore(ID semid, INT cnt, TIMEOUT timeout);
 
 // device
-ID sk_opepn_device(const UB* name, UINT open_mode);
+ID sk_open_device(const UB* name, UINT open_mode);
 ERR sk_sync_read_device(ID dd, W start, void* buf, SZ size, SZ* asize);
 ERR sk_sync_write_device(ID dd, W start, const void* buf, SZ size, SZ* asize);
 #endif

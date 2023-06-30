@@ -68,7 +68,7 @@ typedef struct {
     // i2c_inst_t* i2c_i; /**< i2c connection instance */
     ID i2c_i;
 
-    char external_vcc; /**< whether display uses external vcc */
+    BOOL external_vcc; /**< whether display uses external vcc */
     uint8_t* buffer;   /**< display buffer */
     SZ bufsize;        /**< buffer size */
 } ssd1306_t;
@@ -87,7 +87,7 @@ typedef struct {
  *	@retval false if initialization failed
  */
 // buffer size must be >= width * height / 8;
-char ssd1306_init(ssd1306_t* p, uint16_t width, uint16_t height,
+BOOL ssd1306_init(ssd1306_t* p, uint16_t width, uint16_t height,
                   uint8_t address, ID i2c_instance, uint8_t* buffer);
 
 /**

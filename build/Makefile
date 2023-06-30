@@ -32,7 +32,8 @@ main-build: $(BUILD_ARTIFACT) secondary-outputs
 $(BUILD_ARTIFACT): $(OBJS) $(USER_OBJS) makefile objects.mk
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU Arm Cross C Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -ffreestanding -g3 -T "../linker/pico_memmap.ld" -Xlinker --gc-sections -Wl,-Map,$(BUILD_MAP) -o $(BUILD_ARTIFACT) $(OBJS) $(USER_OBJS) $(LIBS)
+	# arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -ffreestanding -g3 -T "../linker/pico_memmap.ld" -Xlinker --gc-sections -Wl,-Map,$(BUILD_MAP) -o $(BUILD_ARTIFACT) $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -ffreestanding -g3 -L"~/APFSCS/cross/rpi/arm-unknown-eabi/arm-unknown-eabi/lib" -lc  -T "../linker/pico_memmap.ld" -Xlinker --gc-sections -Wl,-Map,$(BUILD_MAP) -o $(BUILD_ARTIFACT) $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

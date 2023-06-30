@@ -1,6 +1,6 @@
 #include <kernel.h>
 
-FlagControlBlock fcb_table[MAX_FLAG_ID];
+FlagControlBlock fcb_table[MAX_FLAGS];
 SemaphoreControlBlock scb_table[MAX_SEMAPHORE_ID];
 
 // events
@@ -11,7 +11,7 @@ ID sk_create_flag(const FlagInfo* info) {
     for (flgid = 0; fcb_table[flgid].state != KS_NONEXIST; flgid++)
         ;
 
-    if (flgid < MAX_FLAG_ID) {
+    if (flgid < MAX_FLAGS) {
         fcb_table[flgid].state = KS_EXIST;
         fcb_table[flgid].pattern = info->initial_value;
         flgid++;
@@ -36,7 +36,7 @@ ERR sk_set_flag(ID flgid, UINT set_pattern) {
     ERR err = E_OK;
     UINT interrupt_status;
 
-    if (flgid <= 0 || flgid > MAX_FLAG_ID)
+    if (flgid <= 0 || flgid > MAX_FLAGS)
         return E_ID;
 
     DI(interrupt_status);
@@ -80,7 +80,7 @@ ERR sk_clear_flag(ID flgid, UINT clear_pattern) {
     ERR err = E_OK;
     UINT interrupt_status;
 
-    if (flgid <= 0 || flgid > MAX_FLAG_ID)
+    if (flgid <= 0 || flgid > MAX_FLAGS)
         return E_ID;
 
     DI(interrupt_status);
@@ -100,7 +100,7 @@ ERR sk_wait_flag(ID flgid, UINT wait_pattern, UINT wait_mode,
     ERR err = E_OK;
     UINT interrupt_status;
 
-    if (flgid <= 0 || flgid > MAX_FLAG_ID)
+    if (flgid <= 0 || flgid > MAX_FLAGS)
         return E_ID;
 
     DI(interrupt_status);
