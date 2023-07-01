@@ -5,4 +5,6 @@
 -MP
 -I.
 -I./include
+-I/home/scott/gcc-arm-none-eabi/arm-none-eabi/include
+-I/opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include
 -std=c99
