@@ -189,7 +189,7 @@ int usermain(void) {
 
     // enable only one of below
     /* preemptive_multi_tasking(); */
-    /* sleep_wake(); */
+    sleep_wake();
     /* events(); */
     /* device(); */
 

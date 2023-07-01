@@ -14,7 +14,13 @@ make
 
 ## How to run
 
-* clone https://github.com/wokwi/rp2040js
+* clone `sokoide` branch from a for at <https://github.com/sokoide/rp2040js/tree/sokoide>
+
+```sh
+git clone https://github.com/sokoide/rp2040js.git
+git checkout -b sokoide origin/sokoide
+```
+
 * cd build and update rp2040js path in Makefile
 * run it by `make run`
 * log
@@ -39,6 +45,8 @@ TASK_STACK_BASE_N[07]: 0x2003D300
 ...
 (ctrl-c to quit)
 ```
+
+* when you make a change in your rpi OS, run `make reset` to reload the new code
 
 ## Directories
 

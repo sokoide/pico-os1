@@ -18,6 +18,7 @@ BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ART
 BUILD_MAP = $(BUILD_ARTIFACT_NAME).map
 BUILD_HEX = $(BUILD_ARTIFACT_NAME).hex
 BUILD_SIZE = $(BUILD_ARTIFACT_NAME).siz
+export picotarget = $(realpath $(BUILD_HEX))
 
 DEPS := $(OBJS:.o=.d)
 
@@ -55,8 +56,10 @@ clean:
 secondary-outputs: $(BUILD_HEX) $(BUILD_SIZE)
 
 run: $(BUILD_HEX)
-	cp $(BUILD_HEX) ~/repo/oss/rp2040js/hello_uart.hex
-	cd  ~/repo/oss/rp2040js && npm start
+	cd  ~/repo/sokoide/rp2040js && npm start
+
+reset: $(BUILD_HEX)
+	ps -ef|grep node | grep emulator-run |grep -v grep |awk '{print("kill -HUP "$$2)}'| sh
 
 .PHONY: all clean dependents main-build
 
