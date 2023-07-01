@@ -18,7 +18,9 @@ make
 
 ```sh
 git clone https://github.com/sokoide/rp2040js.git
+cd rp2040js
 git checkout -b sokoide origin/sokoide
+npm install
 ```
 
 * cd build and update rp2040js path in Makefile
