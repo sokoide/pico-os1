@@ -1,5 +1,5 @@
-#include <syscalls.h>
 #include <kernel.h>
+#include <syscalls.h>
 
 extern const void* __bss_end;
 

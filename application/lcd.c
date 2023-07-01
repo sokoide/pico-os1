@@ -31,7 +31,8 @@ void set_line(char* line, int i) {
 }
 
 void draw_loop(int n, int count) {
-    char line[64];
+    char line[32];
+    printf("draw_loop...");
     clear_rect(&disp, 0, 34, 128, 64);
     for (int i = 0; i < count; i++) {
         if (i + n < MAX_TASKS) {
@@ -63,7 +64,7 @@ void task_lcd_func(INT stacd, void* exinf) {
         printf("TASK_STACK_BASE_N[%02d]: 0x%08X\r\n", i, TASK_STACK_BASE_N(i));
     }
 
-    char line[64];
+    char line[32];
 
     printf("ssd1306_clear...\r\n");
     ssd1306_clear(&disp);
