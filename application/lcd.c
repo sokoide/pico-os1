@@ -1,6 +1,6 @@
-#include "ssd1306.h"
-#include "usermain.h"
+#include "examples.h"
 #include <kernel.h>
+#include <ssd1306.h>
 #include <stdio.h>
 
 void task_lcd_func(INT stacd, void* exinf);
@@ -25,7 +25,7 @@ void clear_rect(ssd1306_t* p, uint32_t x, uint32_t y, uint32_t width,
 }
 
 void set_line(char* line, int i) {
-    sprintf(line, "STK_BASE%02d: 0x%08X\r\n", i, TASK_STACK_BASE_N(i));
+    sprintf(line, "STK_BASE%02d:0x%08X\r\n", i, TASK_STACK_BASE_N(i));
 }
 
 void draw_loop(int n, int count) {
@@ -39,7 +39,7 @@ void draw_loop(int n, int count) {
         }
     }
     ssd1306_show(&disp);
-    sk_delay_task(3000);
+    sk_delay_task(2000);
 }
 void task_lcd_func(INT stacd, void* exinf) {
     printf("task_lcd_func...\r\n");
