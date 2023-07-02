@@ -6,13 +6,13 @@
 C_SRCS += \
 ../application/usermain.c \
 ../application/examples.c \
-../application/lcd.c
+../application/example_lcd.c
 
 
 OBJS += \
 ./application/usermain.o \
 ./application/examples.o \
-./application/lcd.o
+./application/example_lcd.o
 
 
 # Each subdirectory must supply rules for building sources it contributes

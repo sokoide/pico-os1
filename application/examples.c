@@ -161,8 +161,11 @@ void device() {
     else
         printf("Open I2C1\r\n");
 
-    tid_lcd = sk_create_task(&task_lcd);
-    sk_start_task(tid_lcd, 0);
+    /* tid_lcd = sk_create_task(&task_lcd); */
+    /* sk_start_task(tid_lcd, 0); */
+    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3, task_lcd_func, 10, 0, NULL);
+    t1 = sk_create_task(&task1);
+    sk_start_task(t1, 0);
 
     sk_sleep_task(TMO_FEVR);
 }

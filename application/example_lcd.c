@@ -3,15 +3,6 @@
 #include <ssd1306.h>
 #include <stdio.h>
 
-void task_lcd_func(INT stacd, void* exinf);
-
-ID tid_lcd;
-TaskInfo task_lcd = {.task_attr = TA_HLNG | TA_RNG3,
-                     .task = task_lcd_func,
-                     .task_pri = 10,
-                     .stack_size = 0,
-                     .stack = NULL};
-
 ssd1306_t disp;
 UB buff[128 * 64 + 1];
 
@@ -30,7 +21,7 @@ void set_line(char* line, int i) {
 
 void draw_loop(int n, int count) {
     char line[32];
-    printf("draw_loop...");
+    printf("draw_loop...\r\n");
     clear_rect(&disp, 0, 34, 128, 64);
     for (int i = 0; i < count; i++) {
         if (i + n < MAX_TASKS) {

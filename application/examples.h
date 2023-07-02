@@ -12,4 +12,6 @@ void sleep_wake();
 void events();
 void device();
 
+void task_lcd_func(INT stacd, void* exinf);
+
 #endif
