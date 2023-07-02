@@ -1,7 +1,8 @@
 ENTRY(reset_handler)
 
 MEMORY {
-    ROM (rx)	: ORIGIN = 0x10000000, LENGTH = 2048K
+    ROM (rx)	: ORIGIN = 0x10000000, LENGTH = 1024K
+    FS (xrw)    : ORIGIN = 0x10100000, LENGTH = 1024K
     RAM (xrw)	: ORIGIN = 0x20000000, LENGTH = 256K
 }
 
@@ -39,6 +40,7 @@ SECTIONS {
     } > ROM
     __exidx_end = .;
 
+
     __data_org = .;
     .data : AT(__data_org) {
         __data_start = .;
@@ -47,6 +49,7 @@ SECTIONS {
         . = ALIGN(4);
         __data_end = .;
     } >RAM
+
     .bss ALIGN(4) (NOLOAD) : {
         __bss_start = .;
         *(.bss)
@@ -56,4 +59,12 @@ SECTIONS {
         __bss_end = .;
         __end = .;
     } >RAM
+
+	.fs_section : {
+		KEEP(*(.fs_section))
+		koidos.o (.fs_section)
+	} > FS
+    ASSERT(_binary_koidos_fat_end - _binary_koidos_fat_start == 1048576,
+        "ERROR: koidos must be 1MB")
+
 }

@@ -22,7 +22,7 @@ export picotarget = $(realpath $(BUILD_HEX))
 
 DEPS := $(OBJS:.o=.d)
 CFLAGS := -std=c99 -mcpu=cortex-m0plus -mthumb -O0 -ffreestanding -g3 -MMD -MP -I"../include"
-LDFLAGS := -lc -T "../linker/pico_memmap.ld" -Xlinker --gc-sections -Wl,-Map,$(BUILD_MAP)
+LDFLAGS := -lc -T "../linker/pico_memmap.ld" -Xlinker --gc-sections -Wl,-Map,$(BUILD_MAP) -Wl,--section-start=.fs=0x18000000
 
 # All Target
 all: main-build
@@ -31,7 +31,10 @@ all: main-build
 main-build: $(BUILD_ARTIFACT) secondary-outputs
 
 # Tool invocations
-$(BUILD_ARTIFACT): $(OBJS) $(USER_OBJS) Makefile objects.mk
+$(BUILD_ARTIFACT): $(OBJS) $(USER_OBJS) Makefile objects.mk koidos.fat
+	@echo 'Converting a fs file'
+	# arm-none-eabi-objcopy -I binary -O elf32-littlearm -B armv6s-m --rename-section .data=.fs_section koidos.fat koidos.o
+	arm-none-eabi-objcopy -I binary -O elf32-littlearm -B armv6s-m --rename-section .data=.fs_section koidos.fat koidos.o
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU Arm Cross C Linker'
 	arm-none-eabi-gcc $(CFLAGS) -static -nostartfiles -g3 $(LDFLAGS) -o $(BUILD_ARTIFACT) $(OBJS) $(USER_OBJS) $(LIBS)

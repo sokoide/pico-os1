@@ -81,7 +81,7 @@ void run_shell() {
         printf("> ");
         fflush(stdout);
 
-        sk_delay_task(1000);
+        sk_delay_task(1);
 
         sk_uart0_gets_s(line, sizeof(line) / sizeof(char));
         process_command(line);
