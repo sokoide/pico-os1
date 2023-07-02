@@ -115,10 +115,8 @@ void preemptive_multi_tasking() {
     sem.initial_value = 1;
     sem.max_value = 1;
     sid = sk_create_semaphore(&sem);
-    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_1, 10,
-                       TASK_STACK_SIZE, TASK_STACK_BASE_N(0));
-    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_2, 10,
-                       TASK_STACK_SIZE, TASK_STACK_BASE_N(1));
+    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3, task_1, 10, 0, NULL);
+    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3, task_2, 10, 0, NULL);
     t1 = sk_create_task(&task1);
     t2 = sk_create_task(&task2);
     sk_start_task(t1, 0);
@@ -126,10 +124,8 @@ void preemptive_multi_tasking() {
 }
 
 void sleep_wake() {
-    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_waker, 10,
-                       TASK_STACK_SIZE, TASK_STACK_BASE_N(0));
-    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_sleeper, 10,
-                       TASK_STACK_SIZE, TASK_STACK_BASE_N(1));
+    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3, task_waker, 10, 0, NULL);
+    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3, task_sleeper, 10, 0, NULL);
     t1 = sk_create_task(&task1);
     t2 = sk_create_task(&task2);
     sk_start_task(t1, 0);
@@ -141,12 +137,9 @@ void events() {
     fi.initial_value = 0;
     fid = sk_create_flag(&fi);
 
-    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3 | TA_USERBUF, task_button, 10,
-                       TASK_STACK_SIZE, TASK_STACK_BASE_N(0));
-    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3 | TA_USERBUF, task_led1, 10,
-                       TASK_STACK_SIZE, TASK_STACK_BASE_N(1));
-    sk_create_taskinfo(&task3, TA_HLNG | TA_RNG3 | TA_USERBUF, task_led2, 10,
-                       TASK_STACK_SIZE, TASK_STACK_BASE_N(2));
+    sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3, task_button, 10, 0, NULL);
+    sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3, task_led1, 10, 0, NULL);
+    sk_create_taskinfo(&task3, TA_HLNG | TA_RNG3, task_led2, 10, 0, NULL);
     t1 = sk_create_task(&task1);
     t2 = sk_create_task(&task2);
     t3 = sk_create_task(&task3);

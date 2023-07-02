@@ -6,13 +6,11 @@
 void task_lcd_func(INT stacd, void* exinf);
 
 ID tid_lcd;
-TaskInfo task_lcd = {
-    .task_attr = TA_HLNG | TA_RNG3 | TA_USERBUF,
-    .task = task_lcd_func,
-    .task_pri = 10,
-    .stack_size = TASK_STACK_SIZE,
-    .stack = TASK_STACK_BASE_N(3),
-};
+TaskInfo task_lcd = {.task_attr = TA_HLNG | TA_RNG3,
+                     .task = task_lcd_func,
+                     .task_pri = 10,
+                     .stack_size = 0,
+                     .stack = NULL};
 
 ssd1306_t disp;
 UB buff[128 * 64 + 1];

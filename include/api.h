@@ -1,6 +1,9 @@
 #ifndef _API_H_
 #define _API_H_
 
+// ref:
+// https://github.com/tron-forum/mtkernel_3/blob/master/include/tk/syscall.h
+
 #include "kerneldef.h"
 #include "sysdef.h"
 #include "syslib.h"
@@ -41,8 +44,6 @@
 #define TDN_I2C_EXEC (-100) // 属性データ(拡張アクセス)
 
 /* structs */
-// ref:
-// https://github.com/tron-forum/mtkernel_3/blob/master/include/tk/syscall.h
 typedef struct {
     void* exinf; // extended info, not used
     ATTR task_attr;

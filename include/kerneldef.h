@@ -3,9 +3,9 @@
 
 #include <stddef.h>
 
+#include "sysdef.h"
 #include "syslib.h"
 #include "typedef.h"
-#include "sysdef.h"
 
 /* constants */
 #define MAX_TASKS 32
@@ -19,7 +19,7 @@
 #define TASK_STACK_SIZE (1024)
 #define TASK_STACK_BASE (MAIN_TASK_STACK_BASE - MAIN_TASK_STACK_SIZE)
 #define TASK_STACK_UPPER_LIMIT (TASK_STACK_BASE - TASK_STACK_SIZE * MAX_TASKS)
-#define TASK_STACK_BASE_N(X)  (void*)(TASK_STACK_BASE - TASK_STACK_SIZE * X)
+#define TASK_STACK_BASE_N(X) (void*)(TASK_STACK_BASE - TASK_STACK_SIZE * X)
 
 /* enums */
 typedef enum {

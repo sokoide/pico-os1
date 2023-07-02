@@ -118,11 +118,11 @@ ID sk_create_task(const TaskInfo* ti) {
     ID id;
     INT i;
 
-    if ((ti->task_attr & ~TA_RNG3) != (TA_HLNG | TA_USERBUF))
+    if (ti->task_attr & ~(TA_RNG3 | TA_HLNG | TA_USERBUF))
         return E_RSATR;
     if (ti->task_pri <= 0 || ti->task_pri > MAX_TASK_PRI)
         return E_PAR;
-    if (ti->stack_size == 0)
+    if ((ti->task_attr & TA_USERBUF) && (ti->stack_size == 0))
         return E_PAR;
 
     DI(interrupt_status);
@@ -141,8 +141,13 @@ ID sk_create_task(const TaskInfo* ti) {
 
         tcb_table[i].task_addr = ti->task;
         tcb_table[i].task_pri = ti->task_pri;
-        tcb_table[i].stack_size = ti->stack_size;
-        tcb_table[i].stack_addr = ti->stack;
+        if (ti->task_attr & TA_USERBUF) {
+            tcb_table[i].stack_size = ti->stack_size;
+            tcb_table[i].stack_addr = ti->stack;
+        } else {
+            tcb_table[i].stack_size = TASK_STACK_SIZE;
+            tcb_table[i].stack_addr = TASK_STACK_BASE_N(i);
+        }
 
         id = i + 1;
     } else {
