@@ -93,7 +93,14 @@ extern ERR sk_signal_semaphore(ID semid, INT cnt);
 extern ERR sk_wait_semaphore(ID semid, INT cnt, TIMEOUT timeout);
 
 // device
-ID sk_open_device(const UB* name, UINT open_mode);
-ERR sk_sync_read_device(ID dd, W start, void* buf, SZ size, SZ* asize);
-ERR sk_sync_write_device(ID dd, W start, const void* buf, SZ size, SZ* asize);
+extern ID sk_open_device(const UB* name, UINT open_mode);
+extern ERR sk_sync_read_device(ID dd, W start, void* buf, SZ size, SZ* asize);
+extern ERR sk_sync_write_device(ID dd, W start, const void* buf, SZ size,
+                                SZ* asize);
+
+// uart
+extern char sk_uart0_getc(void);
+extern int sk_uart0_putc(char c);
+extern int sk_uart0_gets_s(char* s, int len);
+extern int sk_uart0_puts(char* s);
 #endif

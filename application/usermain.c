@@ -1,4 +1,5 @@
 ﻿#include "examples.h"
+#include "shell.h"
 #include <kernel.h>
 #include <stdio.h>
 
@@ -14,13 +15,14 @@ int usermain(void) {
     for (int i = 0; i < MAX_TASKS; i++) {
         printf("TASK_STACK_BASE_N[%02d]: 0x%08X\r\n", i, TASK_STACK_BASE_N(i));
     }
+    fflush(stdout);
 
     // enable only one of below
     /* preemptive_multi_tasking(); */
     /* sleep_wake(); */
     /* events(); */
-    device();
+    /* device(); */
+    run_shell();
 
-    printf("usermain exitting...\r\n");
     return 0;
 }

@@ -23,10 +23,7 @@ static int error(int result) {
     return result;
 }
 
-int _read(int file, char* ptr, int len) {
-    // TODO:
-    return len;
-}
+int _read(int file, char* ptr, int len) { return len; }
 
 int _lseek(int file, int ptr, int dir) {
     // TODO:
@@ -35,9 +32,7 @@ int _lseek(int file, int ptr, int dir) {
 
 int _write(int file, char* ptr, int len) {
     for (int i = 0; i < len; i++) {
-        while ((in_w(UART0_BASE + UARTx_FR) & UART_FR_TXFF) != 0)
-            ; /* wait for outgoing FIFO queue */
-        out_w(UART0_BASE + UARTx_DR, *ptr++);
+        sk_uart0_putc(*ptr++);
     }
     return len;
 }

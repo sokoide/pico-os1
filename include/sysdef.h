@@ -132,7 +132,9 @@
 #define UART_CR_RXE (1 << 9)
 #define UART_CR_TXE (1 << 8)
 #define UART_CR_EN (1 << 0)
-#define UART_FR_TXFF (1 << 5)
+// https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2040/hardware_regs/include/hardware/regs/uart.h#L199
+#define UART_FR_TXFF (0x00000020)
+#define UART_FR_RXFF (0x00000010)
 
 /* IOPORT */
 #define SIO_BASE 0xD0000000

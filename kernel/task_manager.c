@@ -96,7 +96,7 @@ void scheduler(void) {
 }
 
 void initial_task_func(INT stacd /* not used */, void* exinf /* not used */) {
-    tm_com_init();
+    uart_init();
     printf("initial task started.\r\n");
 
     usermain();

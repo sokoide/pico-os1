@@ -101,6 +101,7 @@ extern void task_queue_add_entry(TaskControlBlock** queue,
 extern void task_queue_remove_top(TaskControlBlock** queue);
 extern void task_queue_remove_entry(TaskControlBlock** queue,
                                     TaskControlBlock* tcb);
+extern void uart_init(void);
 
 extern int main(void);
 extern int usermain(void);

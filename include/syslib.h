@@ -11,9 +11,7 @@
 // static inline UW in_w(UW adr) { return *(_UW*)adr; }
 static inline UW in_w(uintptr_t adr) { return *(_UW*)adr; }
 
-static inline void out_w(uintptr_t adr, UW data) {
-    *(_UW*)adr = data;
-}
+static inline void out_w(uintptr_t adr, UW data) { *(_UW*)adr = data; }
 
 #define OP_CLR 0x3000
 static inline void clr_w(uintptr_t adr, UW data) {
@@ -49,8 +47,5 @@ static inline UW get_sp(void) {
 /* interrupts */
 #define DI(interrupt_status) (interrupt_status = get_primask(), set_primask(1))
 #define EI(interrupt_status) (set_primask(interrupt_status))
-
-/* serial */
-void tm_com_init(void);
 
 #endif

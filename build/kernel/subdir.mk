@@ -1,23 +1,23 @@
 # Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
-../kernel/syslib.c \
 ../kernel/context.c \
 ../kernel/task_manager.c \
 ../kernel/systimer.c \
 ../kernel/event.c \
-../kernel/syscalls.c
+../kernel/syscalls.c \
+../kernel/uart.c \
 
 ASM_SRCS += \
 ../kernel/dispatch.S
 
 OBJS += \
 ./kernel/dispatch.o \
-./kernel/syslib.o \
 ./kernel/context.o \
 ./kernel/task_manager.o \
 ./kernel/systimer.o \
 ./kernel/event.o \
-./kernel/syscalls.o
+./kernel/syscalls.o \
+./kernel/uart.o \
 
 
 
