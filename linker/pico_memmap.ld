@@ -64,7 +64,7 @@ SECTIONS {
 		KEEP(*(.fs_section))
 		koidos.o (.fs_section)
 	} > FS
-    ASSERT(_binary_koidos_fat_end - _binary_koidos_fat_start == 1048576,
-        "ERROR: koidos must be 1MB")
+    ASSERT(_binary_koidos_fat_end - _binary_koidos_fat_start == 720*1024,
+        "ERROR: koidos must be 720MB")
 
 }
