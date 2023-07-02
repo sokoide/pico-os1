@@ -8,7 +8,7 @@ C_SRCS += \
 ../kernel/syscalls.c
 
 ASM_SRCS += \
-../kernel/dispatch.s
+../kernel/dispatch.S
 
 OBJS += \
 ./kernel/dispatch.o \
@@ -29,7 +29,7 @@ kernel/%.o: ../kernel/%.c kernel/subdir.mk
 	@echo 'Finished building: $<'
 	@echo ' '
 
-kernel/%.o: ../kernel/%.s kernel/subdir.mk
+kernel/%.o: ../kernel/%.S kernel/subdir.mk
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU Arm Cross Assembler'
 	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -ffreestanding -g3 -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
