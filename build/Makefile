@@ -18,6 +18,7 @@ BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ART
 BUILD_MAP = $(BUILD_ARTIFACT_NAME).map
 BUILD_HEX = $(BUILD_ARTIFACT_NAME).hex
 BUILD_SIZE = $(BUILD_ARTIFACT_NAME).siz
+EMULATOR_PATH = $(HOME)/repo/sokoide/rp2040js
 export picotarget = $(realpath $(BUILD_HEX))
 
 DEPS := $(OBJS:.o=.d)
@@ -33,7 +34,6 @@ main-build: $(BUILD_ARTIFACT) secondary-outputs
 # Tool invocations
 $(BUILD_ARTIFACT): $(OBJS) $(USER_OBJS) Makefile objects.mk koidos.fat
 	@echo 'Converting a fs file'
-	# arm-none-eabi-objcopy -I binary -O elf32-littlearm -B armv6s-m --rename-section .data=.fs_section koidos.fat koidos.o
 	arm-none-eabi-objcopy -I binary -O elf32-littlearm -B armv6s-m --rename-section .data=.fs_section koidos.fat koidos.o
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU Arm Cross C Linker'
@@ -61,10 +61,10 @@ clean:
 secondary-outputs: $(BUILD_HEX) $(BUILD_SIZE)
 
 run: $(BUILD_HEX)
-	cd  ~/repo/sokoide/rp2040js && npm start
+	cd  $(EMULATOR_PATH) && npm start
 
 debug: $(BUILD_HEX)
-	cd  ~/repo/sokoide/rp2040js && node --nolazy -r ts-node/register/transpile-only --inspect demo/emulator-run.ts
+	cd  $(EMULATOR_PATH) && node --nolazy -r ts-node/register/transpile-only --inspect demo/emulator-run.ts
 
 reset: $(BUILD_HEX)
 	ps -ef|grep node | grep emulator-run |grep -v grep |awk '{print("kill -HUP "$$2)}'| sh
