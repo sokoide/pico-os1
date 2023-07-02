@@ -23,7 +23,12 @@ static int error(int result) {
     return result;
 }
 
-int _read(int file, char* ptr, int len) { return len; }
+int _read(int file, char* ptr, int len) {
+    // this doesn't work
+    // *ptr = sk_uart0_getc();
+    // return 1;
+    return 0;
+}
 
 int _lseek(int file, int ptr, int dir) {
     // TODO:
