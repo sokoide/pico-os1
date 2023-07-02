@@ -54,7 +54,7 @@ TASK_STACK_BASE_N[07]: 0x2003D300
 
 ```sh
 $ brew install mtools
-$ mformat -f 720 -C -i koidos.fat ::
+$ mformat -f 720 -v KOIDOS -C -i koidos.fat ::
 $ $ hexdump -C koidos.fat
 00000000  eb 3c 90 4d 54 4f 4f 34  30 34 33 00 02 02 01 00  |.<.MTOO4043.....|
 00000010  02 70 00 a0 05 f9 03 00  09 00 02 00 00 00 00 00  |.p..............|
@@ -72,8 +72,7 @@ $ $ hexdump -C koidos.fat
 
 $ echo "hello world" > hello.txt
 $ echo "konnnichiwa" > helloj.txt
-$ mcopy -i koidos.fat hello.txt ::
-$ mcopy -i koidos.fat helloj.txt ::
+$ mcopy -i koidos.fat hello.txt helloj.txt ::
 
 $ hexdump -C koidos.fat
 ...
