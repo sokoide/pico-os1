@@ -8,6 +8,7 @@
 #include "typedef.h"
 
 /* constants */
+#define VERSION ("0.0.1")
 #define MAX_TASKS 32
 #define MAX_TASK_PRI 16
 #define MAX_FLAGS 8
