@@ -60,6 +60,9 @@ secondary-outputs: $(BUILD_HEX) $(BUILD_SIZE)
 run: $(BUILD_HEX)
 	cd  ~/repo/sokoide/rp2040js && npm start
 
+debug: $(BUILD_HEX)
+	cd  ~/repo/sokoide/rp2040js && node --nolazy -r ts-node/register/transpile-only --inspect demo/emulator-run.ts
+
 reset: $(BUILD_HEX)
 	ps -ef|grep node | grep emulator-run |grep -v grep |awk '{print("kill -HUP "$$2)}'| sh
 

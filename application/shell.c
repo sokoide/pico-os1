@@ -12,10 +12,6 @@ void run_shell() {
         sk_uart0_gets_s(line, sizeof(line) / sizeof(char));
         printf("uart0_gets_s: %s\r\n", line);
 
-        sk_delay_task(1000);
-        sk_uart0_gets_s(line, sizeof(line) / sizeof(char));
-        printf("uart0_gets_s: %s\r\n", line);
-
         fflush(stdout);
     }
 }
