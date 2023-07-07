@@ -6,6 +6,7 @@ C_SRCS += \
 ../kernel/event.c \
 ../kernel/syscalls.c \
 ../kernel/uart.c \
+../kernel/fat.c \
 
 ASM_SRCS += \
 ../kernel/dispatch.S
@@ -18,6 +19,7 @@ OBJS += \
 ./kernel/event.o \
 ./kernel/syscalls.o \
 ./kernel/uart.o \
+./kernel/fat.o \
 
 
 

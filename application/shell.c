@@ -1,3 +1,4 @@
+#include "shell.h"
 #include <kernel.h>
 #include <stdio.h>
 #include <string.h>
@@ -50,21 +51,89 @@ void memread(uintptr_t addr, int bytes) {
     printf("\r\n");
 }
 
+void callback_ls(DirectoryEntry* entry, void* p) {
+    char name[13]; // 8 + '.' + 3 + '\0'
+    fat_get_entry_name(entry, name, sizeof(name) / sizeof(name[0]));
+    if (entry->attributes & 0x10) {
+        // Directory
+        printf("D %s\n", name);
+    } else if (entry->attributes & 0x08) {
+        // Volume Label
+        printf("V %s\n", name);
+    } else {
+        // File
+        printf("F %s %u\n", name, entry->fileSize);
+    }
+}
+
+void cat_file(uint32_t current_cluster, const char* path) {
+    DirectoryEntry entry;
+    char* token;
+    const char* delim = "/";
+    char tmp_path[64];
+    strcpy(tmp_path, path);
+
+    token = strtok(tmp_path, delim);
+    uint32_t prev_cluster;
+    uint32_t cluster = current_cluster;
+    while (token) {
+        prev_cluster = cluster;
+        fat_set_entry_name(&entry, token);
+        cluster = fat_get_cluster_for_entry(prev_cluster, &entry);
+        token = strtok(NULL, delim);
+    }
+    cat_file_for_cluster(cluster, entry.fileSize);
+}
+
+void cat_file_for_cluster(uint32_t cluster, uint32_t file_size) {
+    char buffer[1025];
+    while (file_size > 0) {
+        uint8_t* p = fat_get_cluster_ptr(cluster);
+        if (file_size >= 1024) {
+            memcpy(buffer, p, 1024);
+            buffer[1024] = '\0';
+            file_size -= 1024;
+            cluster = fat_get_fat(cluster);
+        } else {
+            memcpy(buffer, p, file_size);
+            buffer[file_size] = '\0';
+            file_size = 0;
+        }
+        printf("%s", buffer);
+    }
+}
+
 void process_command(char* cmd) {
     printf("\r\n");
-    if (strcmp(cmd, "whoami") == 0) {
+    const char* delim = " ";
+    char* token;
+    token = strtok(cmd, delim);
+
+    if (strcmp(token, "whoami") == 0) {
         printf("root\r\n");
-    } else if (strcmp(cmd, "version") == 0) {
+    } else if (strcmp(token, "version") == 0) {
         printf("sokoide os ver: %s\r\n", VERSION);
-    } else if (strncmp(cmd, "echo ", 5) == 0) {
+    } else if (strcmp(cmd, "echo") == 0) {
         // TODO: no quote handling
         printf("%s\r\n", &cmd[5]);
-    } else if (strcmp(cmd, "pwd") == 0) {
+    } else if (strcmp(token, "fat") == 0) {
+        fat_print_info();
+        fat_print_header_legend();
+        fat_print_header_dump();
+    } else if (strcmp(token, "ls") == 0) {
+        iterate_dir(0, callback_ls, NULL);
+    } else if (strcmp(token, "cat") == 0) {
+        token = strtok(NULL, delim);
+        if (token != NULL) {
+            cat_file(0, token);
+        }
+    } else if (strcmp(token, "pwd") == 0) {
         // TODO: no file system supported yet
         printf("/\r\n");
-    } else if (strncmp(cmd, "cd ", 3) == 0) {
+    } else if (strncmp(token, "cd ", 3) == 0) {
         // TODO: no file system supported yet
-    } else if (strncmp(cmd, "memread ", 7) == 0) {
+        printf("cd not supported yet\r\n");
+    } else if (strncmp(token, "memread ", 7) == 0) {
         uintptr_t addr;
         int bytes;
         parse_memread_args(&cmd[8], &addr, &bytes);
@@ -77,6 +146,8 @@ void process_command(char* cmd) {
 
 void run_shell() {
     char line[32];
+    fat_init();
+
     while (1) {
         printf("> ");
         fflush(stdout);

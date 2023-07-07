@@ -40,6 +40,12 @@ SECTIONS {
     } > ROM
     __exidx_end = .;
 
+	.fs_section : {
+		__fs_start = .;
+		KEEP(*(.fs_section))
+		koidos.o (.fs_section)
+		__fs_end = .;
+	} > FS
 
     __data_org = .;
     .data : AT(__data_org) {
@@ -60,10 +66,6 @@ SECTIONS {
         __end = .;
     } >RAM
 
-	.fs_section : {
-		KEEP(*(.fs_section))
-		koidos.o (.fs_section)
-	} > FS
     ASSERT(_binary_koidos_fat_end - _binary_koidos_fat_start == 720*1024,
         "ERROR: koidos must be 720MB")
 

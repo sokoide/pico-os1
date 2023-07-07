@@ -15,7 +15,8 @@
 #define MAX_SEMAPHORES 8
 
 // used by the initial boot before calling the first sk_create_task
-#define MAIN_TASK_STACK_SIZE (4096)
+// must be > 5KB for shell (file system handling)
+#define MAIN_TASK_STACK_SIZE (5 * 1024)
 #define MAIN_TASK_STACK_BASE (void*)(INITIAL_STACK_BASE - INITIAL_STACK_SIZE)
 #define TASK_STACK_SIZE (1024)
 #define TASK_STACK_BASE (MAIN_TASK_STACK_BASE - MAIN_TASK_STACK_SIZE)

@@ -53,40 +53,14 @@ TASK_STACK_BASE_N[07]: 0x2003D300
 ## How to make a fat12 FS
 
 ```sh
-$ brew install mtools
-$ mformat -f 720 -v KOIDOS -C -i koidos.fat ::
-$ $ hexdump -C koidos.fat
+brew install mtools
+make fat12
+
+
+hexdump -C koidos.fat
 00000000  eb 3c 90 4d 54 4f 4f 34  30 34 33 00 02 02 01 00  |.<.MTOO4043.....|
 00000010  02 70 00 a0 05 f9 03 00  09 00 02 00 00 00 00 00  |.p..............|
-00000020  00 00 00 00 00 00 29 6b  61 60 7d 4e 4f 20 4e 41  |......)ka`}NO NA|
-00000030  4d 45 20 20 20 20 46 41  54 31 32 20 20 20 fa 31  |ME    FAT12   .1|
-00000040  c0 8e d8 8e c0 fc b9 00  01 be 00 7c bf 00 80 f3  |...........|....|
-00000050  a5 ea 56 00 00 08 b8 01  02 bb 00 7c ba 80 00 b9  |..V........|....|
-00000060  01 00 cd 13 72 05 ea 00  7c 00 00 cd 19 00 00 00  |....r...|.......|
-00000070  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-000001b0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 80 00  |................|
-000001c0  01 00 01 01 09 4f 00 00  00 00 a0 05 00 00 00 00  |.....O..........|
-000001d0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-...
-
-$ echo "hello world" > hello.txt
-$ echo "konnnichiwa" > helloj.txt
-$ mcopy -i koidos.fat hello.txt helloj.txt ::
-
-$ hexdump -C koidos.fat
-...
-00000e00  48 45 4c 4c 4f 20 20 20  54 58 54 20 18 00 6a b7  |HELLO   TXT ..j.|
-00000e10  e2 56 e2 56 00 00 6a b7  e2 56 02 00 0c 00 00 00  |.V.V..j..V......|
-00000e20  48 45 4c 4c 4f 4a 20 20  54 58 54 20 18 00 35 b8  |HELLOJ  TXT ..5.|
-00000e30  e2 56 e2 56 00 00 35 b8  e2 56 03 00 0c 00 00 00  |.V.V..5..V......|
-00000e40  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-00001c00  68 65 6c 6c 6f 20 77 6f  72 6c 64 0a 00 00 00 00  |hello world.....|
-00001c10  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-00002000  6b 6f 6e 6e 6e 69 63 68  69 77 61 0a 00 00 00 00  |konnnichiwa.....|
-00002010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000020  00 00 00 00 00 00 29 0d  15 11 23 4b 4f 49 46 31  |......)...#KOIF1|
 ...
 ```
 
@@ -119,10 +93,15 @@ $ hexdump -C koidos.fat
 * Notice that that's the contents of `koidos.fat` above
 
 ```txt
+# user is always 'root'
 > whoami
 root
+
+# os version
 > version
 sokoide os ver: 0.0.1
+
+# read memory at 0x10100000 for 32 bytes
 > memread 10100000 32
 0x10100000: EBCE3C03 54F54FF4
 0x10100008: 30433433 02200210
@@ -134,16 +113,61 @@ sokoide os ver: 0.0.1
 0x10100E08: 54855845 180100A0
 0x10100E10: E26E5625 000000A0
 0x10100E18: E26E5625 0C000000
+
+# ls root directory
+> ls
+V KOIF12
+F HELLO.TXT 12
+F HELLOJ.TXT 12
+F HOGE.TXT 11
+F PAGE.TXT 14
+
+# cat files
+> cat hoge.txt
+I am hoge.
+
+> cat page.txt
+You are page.
+
+# show fat info
+> fat
+bytesPerSector: 512
+sectorsPerCluster: 2
+reservedSectorCount: 1
+tableCount: 2
+rootEntryCount: 112
+root dir sector count: 7
+total_sectors: 1440
+tableSize16: 3
+* fat start_sector 1
+* fat sectors 6
+* root_dir start_sector 7
+* root_dir sectors 7
+* data start_sector 14
+- relative jump (eb3c) + nop (90)
+- OEM Name
+- bytes per sector
+- sectors per cluster
+- FAT table's 1st sector (reserved sectors)
+- FAT table count
+- Max entries in root table
+- Total sector count
+- Media type
+- sectors per FAT table
+- sectors per track
+- head count
+eb 3c 90 4d 54 4f 4f 34 30 34 33 00 02 02 01 00 **< **M T O O 4 0 4 3 **********
+02 70 00 a0 05 f9 03 00 09 00 02 00 00 00 00 00 **p ****************************
 ```
 
 ## File System
 
-* Contents of `koidos.fat` is converted into `koidos.o` during a link phase in `Makefile` and mapped at 0x18000000 address of the Flash
+* Contents of `koidos.fat` is converted into `koidos.o` during a link phase in `Makefile` and mapped at 0x10100000 address of the Flash
 
 ## Memory Map
 
 * 0x10000000-0x10FFFFFF: 1st half of the flash. OS code is here.
-* 0x10100000-0x101FFFFF: 2nd half of the flash. Contents of `koidos.fat` is here in FAT12 format.
+* 0x10100000-0x101FFFFF: 2nd half of the flash. Contents of 720KB `koidos.fat` is here in FAT12 format.
 * 0x20000000- (264KB): SRAM
 
 

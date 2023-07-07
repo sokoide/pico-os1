@@ -1,6 +1,7 @@
 #include "api.h"
 #include "device.h"
 #include "errors.h"
+#include "fat.h"
 #include "i2c_sysdep.h"
 #include "kerneldef.h"
 #include "sysdef.h"
