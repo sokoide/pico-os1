@@ -19,94 +19,94 @@ ID dd_i2c0, dd_i2c1;
 
 void task_1(INT stacd, void* exinf) {
     sk_wait_semaphore(sid, 1, TMO_FEVR);
-    printf("task1 started...\r\n");
+    printf("task1 started...\n");
     sk_signal_semaphore(sid, 1);
     /* for (INT i = 0; i < 5000; i++) { */
-    /*     printf("task1 looping...\r\n"); */
+    /*     printf("task1 looping...\n"); */
     /*     sk_delay_task(200); */
     /* } */
     while (1) {
         sk_wait_semaphore(sid, 1, TMO_FEVR);
-        printf("task1...\r\n");
+        printf("task1...\n");
         sk_signal_semaphore(sid, 1);
     }
-    printf("task1 exitting...\r\n");
+    printf("task1 exitting...\n");
     sk_exit_task();
 }
 
 void task_2(INT stacd, void* exinf) {
     sk_wait_semaphore(sid, 1, TMO_FEVR);
-    printf("task2 started...\r\n");
+    printf("task2 started...\n");
     sk_signal_semaphore(sid, 1);
     /* for (INT i = 0; i < 10000; i++) { */
-    /*     printf("task2 looping...\r\n"); */
+    /*     printf("task2 looping...\n"); */
     /*     sk_delay_task(100); */
     /* } */
     while (1) {
         sk_wait_semaphore(sid, 1, TMO_FEVR);
-        printf("task2...\r\n");
+        printf("task2...\n");
         sk_signal_semaphore(sid, 1);
     }
-    printf("task2 exitting...\r\n");
+    printf("task2 exitting...\n");
     sk_exit_task();
 }
 
 void task_waker(INT stacd, void* exinf) {
-    printf("waker started...\r\n");
+    printf("waker started...\n");
     while (1) {
-        printf("waker sleeping...\r\n");
+        printf("waker sleeping...\n");
         sk_delay_task(1000);
-        printf("waker waking sleeper...\r\n");
+        printf("waker waking sleeper...\n");
         sk_wakeup_task(t2);
     }
-    printf("waker exitting...\r\n");
+    printf("waker exitting...\n");
     sk_exit_task();
 }
 
 void task_sleeper(INT stacd, void* exinf) {
-    printf("sleeper started...\r\n");
+    printf("sleeper started...\n");
     while (1) {
-        printf("sleeper sleeping...\r\n");
+        printf("sleeper sleeping...\n");
         sk_sleep_task(TMO_FEVR);
-        printf("sleeper woke up\r\n");
+        printf("sleeper woke up\n");
     }
-    printf("sleeper exitting...\r\n");
+    printf("sleeper exitting...\n");
     sk_exit_task();
 }
 
 void task_button(INT stacd, void* exinf) {
-    printf("task_button started...\r\n");
+    printf("task_button started...\n");
     while (1) {
-        printf("task_button: btn-1 on\r\n");
+        printf("task_button: btn-1 on\n");
         sk_set_flag(fid, (1 << 0));
         sk_delay_task(500);
-        printf("task_button: btn-2 on\r\n");
+        printf("task_button: btn-2 on\n");
         sk_set_flag(fid, (1 << 1));
         sk_delay_task(1000);
     }
-    printf("task_button exitting...\r\n");
+    printf("task_button exitting...\n");
     sk_exit_task();
 }
 
 void task_led1(INT stacd, void* exinf) {
-    printf("task_led1 started...\r\n");
+    printf("task_led1 started...\n");
     UINT pattern;
     while (1) {
         sk_wait_flag(fid, (1 << 0), TWF_ANDW | TWF_BITCLR, &pattern, TMO_FEVR);
-        printf("task_led1: flagged\r\n");
+        printf("task_led1: flagged\n");
     }
-    printf("task_led1 exitting...\r\n");
+    printf("task_led1 exitting...\n");
     sk_exit_task();
 }
 
 void task_led2(INT stacd, void* exinf) {
-    printf("task_led2 started...\r\n");
+    printf("task_led2 started...\n");
     UINT pattern;
     while (1) {
         sk_wait_flag(fid, (1 << 1), TWF_ANDW | TWF_BITCLR, &pattern, TMO_FEVR);
-        printf("task_led2: flagged\r\n");
+        printf("task_led2: flagged\n");
     }
-    printf("task_led2 exitting...\r\n");
+    printf("task_led2 exitting...\n");
     sk_exit_task();
 }
 
@@ -151,15 +151,15 @@ void events() {
 void device() {
     dd_i2c0 = sk_open_device((UB*)"iica", TD_UPDATE);
     if (dd_i2c0 < 0)
-        printf("Error I2C0\r\n");
+        printf("Error I2C0\n");
     else
-        printf("Open I2C0\r\n");
+        printf("Open I2C0\n");
 
     dd_i2c1 = sk_open_device((UB*)"iicb", TD_UPDATE);
     if (dd_i2c1 < 0)
-        printf("Error I2C1\r\n");
+        printf("Error I2C1\n");
     else
-        printf("Open I2C1\r\n");
+        printf("Open I2C1\n");
 
     /* tid_lcd = sk_create_task(&task_lcd); */
     /* sk_start_task(tid_lcd, 0); */

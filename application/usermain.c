@@ -4,19 +4,19 @@
 #include <stdio.h>
 
 int usermain(void) {
-    printf("hello\r\n");
-    printf("usermain started...\r\n");
-    printf("hello\r\n");
-    printf("usermain started...\r\n");
+    printf("hello\n");
+    printf("usermain started...\n");
+    printf("hello\n");
+    printf("usermain started...\n");
 
-    printf("TASK_STACK_UPPER_LIMIT: 0x%08X\r\n", TASK_STACK_UPPER_LIMIT);
-    printf("MAIN_TASK_STACK_BASE: 0x%08X\r\n", MAIN_TASK_STACK_BASE);
-    printf("MAIN_TASK_STACK_END: 0x%08X\r\n",
+    printf("TASK_STACK_UPPER_LIMIT: 0x%08X\n", TASK_STACK_UPPER_LIMIT);
+    printf("MAIN_TASK_STACK_BASE: 0x%08X\n", MAIN_TASK_STACK_BASE);
+    printf("MAIN_TASK_STACK_END: 0x%08X\n",
            MAIN_TASK_STACK_BASE - MAIN_TASK_STACK_SIZE);
-    printf("MAIN_TASK SP: 0x%08X\r\n", get_sp());
+    printf("MAIN_TASK SP: 0x%08X\n", get_sp());
     for (int i = 0; i < MAX_TASKS; i++) {
-        printf("TASK_STACK_BASE_N[%02d]: 0x%08X\r\n", i, TASK_STACK_BASE_N(i));
-        printf("TASK_STACK_END_N[%02d]: 0x%08X\r\n", i,
+        printf("TASK_STACK_BASE_N[%02d]: 0x%08X\n", i, TASK_STACK_BASE_N(i));
+        printf("TASK_STACK_END_N[%02d]: 0x%08X\n", i,
                TASK_STACK_BASE_N(i) - TASK_STACK_SIZE);
     }
     fflush(stdout);

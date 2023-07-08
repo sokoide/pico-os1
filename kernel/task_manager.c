@@ -97,7 +97,7 @@ void scheduler(void) {
 
 void initial_task_func(INT stacd /* not used */, void* exinf /* not used */) {
     uart_init();
-    printf("initial task started.\r\n");
+    printf("initial task started.\n");
 
     usermain();
     sk_exit_task();

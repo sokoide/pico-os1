@@ -44,11 +44,11 @@ void memread(uintptr_t addr, int bytes) {
         }
         addr += 4;
         if (printed % 8 == 0)
-            printf("\r\n");
+            printf("\n");
         else
             printf(" ");
     }
-    printf("\r\n");
+    printf("\n");
 }
 
 void callback_ls(DirectoryEntry* entry, void* p) {
@@ -104,7 +104,7 @@ uint32_t cluster_for_path(uint32_t current_cluster, const char* path,
 }
 
 void process_command(char* cmd) {
-    printf("\r\n");
+    printf("\n");
     const char* delim = " ";
     char* token;
     token = strtok(cmd, delim);
@@ -112,12 +112,12 @@ void process_command(char* cmd) {
     DirectoryEntry entry;
 
     if (strcmp(token, "whoami") == 0) {
-        printf("root\r\n");
+        printf("root\n");
     } else if (strcmp(token, "version") == 0) {
-        printf("sokoide os ver: %s\r\n", VERSION);
+        printf("sokoide os ver: %s\n", VERSION);
     } else if (strcmp(cmd, "echo") == 0) {
         // TODO: no quote handling
-        printf("%s\r\n", &cmd[5]);
+        printf("%s\n", &cmd[5]);
     } else if (strcmp(token, "fat") == 0) {
         fat_print_info();
         fat_print_header_legend();
@@ -128,7 +128,7 @@ void process_command(char* cmd) {
             cluster = cluster_for_path(0, token, &entry);
         }
         if (token != NULL && cluster == 0) {
-            printf("cluster not found\r\n");
+            printf("cluster not found\n");
             return;
         }
         iterate_dir(cluster, callback_ls, NULL);
@@ -138,23 +138,23 @@ void process_command(char* cmd) {
             cluster = cluster_for_path(0, token, &entry);
         }
         if (token != NULL && cluster == 0) {
-            printf("cluster not found\r\n");
+            printf("cluster not found\n");
             return;
         }
         cat_file_for_cluster(cluster, entry.fileSize);
     } else if (strcmp(token, "pwd") == 0) {
         // TODO: no file system supported yet
-        printf("/\r\n");
+        printf("/\n");
     } else if (strncmp(token, "cd ", 3) == 0) {
         // TODO: no file system supported yet
-        printf("cd not supported yet\r\n");
+        printf("cd not supported yet\n");
     } else if (strncmp(token, "memread ", 7) == 0) {
         uintptr_t addr;
         int bytes;
         parse_memread_args(&cmd[8], &addr, &bytes);
         memread(addr, bytes);
     } else {
-        printf("unknown command: %s\r\n", cmd);
+        printf("unknown command: %s\n", cmd);
     }
     fflush(stdout);
 }

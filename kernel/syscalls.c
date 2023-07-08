@@ -35,8 +35,12 @@ int _lseek(int file, int ptr, int dir) {
     return 0;
 }
 
+char _write_prev_char = 0;
 int _write(int file, char* ptr, int len) {
     for (int i = 0; i < len; i++) {
+        if( *ptr == '\n' && _write_prev_char != '\r')
+            sk_uart0_putc('\r');
+        _write_prev_char = *ptr;
         sk_uart0_putc(*ptr++);
     }
     return len;
