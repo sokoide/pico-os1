@@ -66,25 +66,6 @@ void callback_ls(DirectoryEntry* entry, void* p) {
     }
 }
 
-void cat_file(uint32_t current_cluster, const char* path) {
-    DirectoryEntry entry;
-    char* token;
-    const char* delim = "/";
-    char tmp_path[64];
-    strcpy(tmp_path, path);
-
-    token = strtok(tmp_path, delim);
-    uint32_t prev_cluster;
-    uint32_t cluster = current_cluster;
-    while (token) {
-        prev_cluster = cluster;
-        fat_set_entry_name(&entry, token);
-        cluster = fat_get_cluster_for_entry(prev_cluster, &entry);
-        token = strtok(NULL, delim);
-    }
-    cat_file_for_cluster(cluster, entry.fileSize);
-}
-
 void cat_file_for_cluster(uint32_t cluster, uint32_t file_size) {
     char buffer[1025];
     while (file_size > 0) {
@@ -103,11 +84,32 @@ void cat_file_for_cluster(uint32_t cluster, uint32_t file_size) {
     }
 }
 
+uint32_t cluster_for_path(uint32_t current_cluster, const char* path,
+                          DirectoryEntry* entry) {
+    char* token;
+    const char* delim = "/";
+    char tmp_path[64];
+    strcpy(tmp_path, path);
+
+    token = strtok(tmp_path, delim);
+    uint32_t prev_cluster;
+    uint32_t cluster = current_cluster;
+    while (token) {
+        prev_cluster = cluster;
+        fat_set_entry_name(entry, token);
+        cluster = fat_get_cluster_for_entry(prev_cluster, entry);
+        token = strtok(NULL, delim);
+    }
+    return cluster;
+}
+
 void process_command(char* cmd) {
     printf("\r\n");
     const char* delim = " ";
     char* token;
     token = strtok(cmd, delim);
+    uint32_t cluster = 0;
+    DirectoryEntry entry;
 
     if (strcmp(token, "whoami") == 0) {
         printf("root\r\n");
@@ -121,12 +123,25 @@ void process_command(char* cmd) {
         fat_print_header_legend();
         fat_print_header_dump();
     } else if (strcmp(token, "ls") == 0) {
-        iterate_dir(0, callback_ls, NULL);
+        token = strtok(NULL, delim);
+        if (token != NULL) {
+            cluster = cluster_for_path(0, token, &entry);
+        }
+        if (token != NULL && cluster == 0) {
+            printf("cluster not found\r\n");
+            return;
+        }
+        iterate_dir(cluster, callback_ls, NULL);
     } else if (strcmp(token, "cat") == 0) {
         token = strtok(NULL, delim);
         if (token != NULL) {
-            cat_file(0, token);
+            cluster = cluster_for_path(0, token, &entry);
         }
+        if (token != NULL && cluster == 0) {
+            printf("cluster not found\r\n");
+            return;
+        }
+        cat_file_for_cluster(cluster, entry.fileSize);
     } else if (strcmp(token, "pwd") == 0) {
         // TODO: no file system supported yet
         printf("/\r\n");

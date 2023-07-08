@@ -119,15 +119,28 @@ sokoide os ver: 0.0.1
 V KOIF12
 F HELLO.TXT 12
 F HELLOJ.TXT 12
-F HOGE.TXT 11
 F PAGE.TXT 14
+D DIR1
+D DIR2
+
+# ls sub directory
+> ls dir1
+D .
+D ..
+D SUBDIR1
+
+> ls dir1/subdir1
+D .
+D ..
+F HOGE.TXT 11
+
 
 # cat files
-> cat hoge.txt
-I am hoge.
-
 > cat page.txt
 You are page.
+
+> cat /dir1/subdir1/hoge.txt
+I am hoge.
 
 # show fat info
 > fat

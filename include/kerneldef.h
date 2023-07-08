@@ -13,6 +13,7 @@
 #define MAX_TASK_PRI 16
 #define MAX_FLAGS 8
 #define MAX_SEMAPHORES 8
+#define MAX_PATH 64
 
 // used by the initial boot before calling the first sk_create_task
 // must be > 5KB for shell (file system handling)

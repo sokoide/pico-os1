@@ -27,6 +27,8 @@ DEPS := $(OBJS:.o=.d)
 CFLAGS := -std=c99 -mcpu=cortex-m0plus -mthumb -O0 -ffreestanding -g3 -MMD -MP -I"../include"
 LDFLAGS := -lc -T "../linker/pico_memmap.ld" -Xlinker --gc-sections -Wl,-Map,$(BUILD_MAP) -Wl,--section-start=.fs=0x18000000
 
+.PHONY: all main-build clean secondary-outputs fat12 run debug reset
+
 # All Target
 all: main-build
 
@@ -71,8 +73,13 @@ fat12:
 	echo "I am hoge." > hoge.txt
 	echo "You are page." > page.txt
 
-	mcopy -i $(IMG) hello.txt helloj.txt hoge.txt page.txt ::
+	mcopy -i $(IMG) hello.txt helloj.txt page.txt ::
 	mdir -i $(IMG)
+
+	mmd -i $(IMG) dir1 dir2 dir1/subdir1
+	mcopy -i $(IMG) hoge.txt ::/dir1/subdir1
+	mdir -i $(IMG)
+	mdir -i $(IMG) ::/dir1/subdir1
 	rm hello*.txt hoge.txt page.txt
 
 run: $(BUILD_HEX)
@@ -83,7 +90,5 @@ debug: $(BUILD_HEX)
 
 reset: $(BUILD_HEX)
 	ps -ef|grep node | grep emulator-run |grep -v grep |awk '{print("kill -HUP "$$2)}'| sh
-
-.PHONY: all clean dependents main-build fat12
 
 -include ../makefile.targets
