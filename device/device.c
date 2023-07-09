@@ -18,7 +18,7 @@ static BOOL nm_cmp(const UB* nm1, const UB* nm2) {
 ID sk_open_device(const UB* name, UINT open_mode) {
     UINT interrupt_status;
     INT i;
-    ERR err;
+    ERR err = E_OK;
 
     for (i = 0; i < DEVICE_NUM; i++) {
         if (nm_cmp(device_table[i].name, name) == TRUE)
@@ -41,7 +41,7 @@ ID sk_open_device(const UB* name, UINT open_mode) {
 }
 
 ERR sk_sync_read_device(ID dd, W start, void* buf, SZ size, SZ* asize) {
-    ERR err;
+    ERR err = E_OK;
 
     if (dd >= DEVICE_NUM)
         return E_ID;
@@ -57,7 +57,7 @@ ERR sk_sync_read_device(ID dd, W start, void* buf, SZ size, SZ* asize) {
 }
 
 ERR sk_sync_write_device(ID dd, W start, const void* buf, SZ size, SZ* asize) {
-    ERR err;
+    ERR err = E_OK;
 
     if (dd >= DEVICE_NUM)
         return E_ID;

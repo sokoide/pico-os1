@@ -11,8 +11,8 @@ bool lcd_initialized = false;
 
 void clear_rect(ssd1306_t* p, uint32_t x, uint32_t y, uint32_t width,
                 uint32_t height) {
-    for (int yy = y; yy < y + height; yy++) {
-        for (int xx = x; xx <= x + width; xx++) {
+    for (uint32_t yy = y; yy < y + height; yy++) {
+        for (uint32_t xx = x; xx <= x + width; xx++) {
             ssd1306_clear_pixel(&disp, xx, yy);
         }
     }

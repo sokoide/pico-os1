@@ -81,7 +81,7 @@ BOOL ssd1306_init(ssd1306_t* p, uint16_t width, uint16_t height,
         0x00, // horizontal
     };
 
-    for (SZ i = 0; i < sizeof(cmds); ++i)
+    for (size_t i = 0; i < sizeof(cmds); ++i)
         ssd1306_write(p, cmds[i]);
 
     return TRUE;
@@ -259,8 +259,8 @@ void ssd1306_bmp_show_image_with_offset(ssd1306_t* p, const uint8_t* data,
 
     int step = biHeight > 0 ? -1 : 1;
     int border = biHeight > 0 ? -1 : biHeight;
-    for (uint32_t y = biHeight > 0 ? biHeight - 1 : 0; y != border; y += step) {
-        for (uint32_t x = 0; x < biWidth; ++x) {
+    for (int32_t y = biHeight > 0 ? biHeight - 1 : 0; y != border; y += step) {
+        for (int32_t x = 0; x < biWidth; ++x) {
             if (((img_data[x >> 3] >> (7 - (x & 7))) & 1) == color_val)
                 ssd1306_draw_pixel(p, x_offset + x, y_offset + y);
         }
@@ -281,7 +281,7 @@ void ssd1306_show(ssd1306_t* p) {
         payload[2] += 32;
     }
 
-    for (SZ i = 0; i < sizeof(payload); ++i)
+    for (size_t i = 0; i < sizeof(payload); ++i)
         ssd1306_write(p, payload[i]);
 
     *(p->buffer - 1) = 0x40;

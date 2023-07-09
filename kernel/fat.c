@@ -55,8 +55,8 @@ void fat_print_info() {
     printf("tableCount: %d\n", _fat_bs->tableCount);
     printf("rootEntryCount: %d\n", _fat_bs->rootEntryCount);
     printf("root dir sector count: %d\n", _fat_bs->rootEntryCount *
-                                               sizeof(DirectoryEntry) /
-                                               _fat_bs->bytesPerSector);
+                                              sizeof(DirectoryEntry) /
+                                              _fat_bs->bytesPerSector);
     printf("total_sectors: %d\n", _fat_bs->totalSectors16);
     // count of FAT table sectors
     printf("tableSize16: %d\n", _fat_bs->tableSize16);
@@ -205,7 +205,7 @@ void fat_print_directory_entry_directory(DirectoryEntry* entry,
             (DirectoryEntry*)fat_get_cluster_ptr(entry->startingClusterNumber);
         if (entry->startingClusterNumber == 0) {
             // root directory
-            for (int i = 0;
+            for (uint32_t i = 0;
                  i < _fat_bs->bytesPerSector * _fat_bs->sectorsPerCluster /
                          sizeof(DirectoryEntry);
                  i++) {
@@ -225,7 +225,7 @@ void fat_print_directory_entry_directory(DirectoryEntry* entry,
                 nextCluster = fat_get_fat(cluster);
                 directoryEntries =
                     (DirectoryEntry*)(fat_get_cluster_ptr(cluster));
-                for (int i = 0;
+                for (uint32_t i = 0;
                      i < _fat_bs->bytesPerSector * _fat_bs->sectorsPerCluster /
                              sizeof(DirectoryEntry);
                      i++) {
@@ -284,8 +284,8 @@ void iterate_dir(uint32_t cluster, iterate_dir_callback callback, void* p) {
     while (cluster < 0xF00) {
         nextCluster = fat_get_fat(cluster);
         directoryEntries = (DirectoryEntry*)(fat_get_cluster_ptr(cluster));
-        for (int i = 0; i < bs->bytesPerSector * bs->sectorsPerCluster /
-                                sizeof(DirectoryEntry);
+        for (uint32_t i = 0; i < bs->bytesPerSector * bs->sectorsPerCluster /
+                                     sizeof(DirectoryEntry);
              i++) {
             DirectoryEntry* entry = &directoryEntries[i];
             // 0x00 not use, 0xE5 deleted
