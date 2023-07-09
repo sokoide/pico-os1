@@ -1,4 +1,5 @@
 #include "examples.h"
+#include "usermain.h"
 #include <kernel.h>
 #include <stdio.h>
 
@@ -10,10 +11,6 @@ ID t1, t2, t3;
 ID fid;
 FlagInfo fi;
 
-// semaphore
-ID sid;
-Semaphore sem;
-
 // I2C
 ID dd_i2c0, dd_i2c1;
 
@@ -21,10 +18,6 @@ void task_1(INT stacd, void* exinf) {
     sk_wait_semaphore(sid, 1, TMO_FEVR);
     printf("task1 started...\n");
     sk_signal_semaphore(sid, 1);
-    /* for (INT i = 0; i < 5000; i++) { */
-    /*     printf("task1 looping...\n"); */
-    /*     sk_delay_task(200); */
-    /* } */
     while (1) {
         sk_wait_semaphore(sid, 1, TMO_FEVR);
         printf("task1...\n");
@@ -38,10 +31,6 @@ void task_2(INT stacd, void* exinf) {
     sk_wait_semaphore(sid, 1, TMO_FEVR);
     printf("task2 started...\n");
     sk_signal_semaphore(sid, 1);
-    /* for (INT i = 0; i < 10000; i++) { */
-    /*     printf("task2 looping...\n"); */
-    /*     sk_delay_task(100); */
-    /* } */
     while (1) {
         sk_wait_semaphore(sid, 1, TMO_FEVR);
         printf("task2...\n");
@@ -114,7 +103,6 @@ void preemptive_multi_tasking() {
     sem.attr = TA_TFIFO | TA_FIRST;
     sem.initial_value = 1;
     sem.max_value = 1;
-    sid = sk_create_semaphore(&sem);
     sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3, task_1, 10, 0, NULL);
     sk_create_taskinfo(&task2, TA_HLNG | TA_RNG3, task_2, 10, 0, NULL);
     t1 = sk_create_task(&task1);
@@ -161,11 +149,7 @@ void device() {
     else
         printf("Open I2C1\n");
 
-    /* tid_lcd = sk_create_task(&task_lcd); */
-    /* sk_start_task(tid_lcd, 0); */
     sk_create_taskinfo(&task1, TA_HLNG | TA_RNG3, task_lcd_func, 10, 0, NULL);
     t1 = sk_create_task(&task1);
     sk_start_task(t1, 0);
-
-    sk_sleep_task(TMO_FEVR);
 }

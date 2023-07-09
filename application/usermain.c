@@ -3,6 +3,9 @@
 #include <kernel.h>
 #include <stdio.h>
 
+ID sid;
+Semaphore sem;
+
 int usermain(void) {
     printf("hello\n");
     printf("usermain started...\n");
@@ -20,7 +23,10 @@ int usermain(void) {
                TASK_STACK_BASE_N(i) - TASK_STACK_SIZE);
     }
     fflush(stdout);
-
+    sem.initial_value = 1;
+    sem.max_value = 1;
+    sid = sk_create_semaphore(&sem);
+    printf("Semaphore %d created\n", sid);
     // enable only one of below
     /* preemptive_multi_tasking(); */
     /* sleep_wake(); */

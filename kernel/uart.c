@@ -13,7 +13,7 @@ void uart_init(void) {
 
 char sk_uart0_getc() {
     while ((in_w(UART0_BASE + UARTx_FR) & UART_FR_RXFF) != 0)
-        ; /* wait for incoming FIFO queue */
+        sk_delay_task(1); /* wait for incoming FIFO queue */
 
     char c = (in_w(UART0_BASE + UARTx_DR) & 0xFF);
     // echo back

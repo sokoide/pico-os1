@@ -1,7 +1,9 @@
 #include "shell.h"
+#include "examples.h"
 #include <kernel.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 // offset: 10 for decimal, 16 for hex
 uintptr_t str2int(char* p, int offset) {
@@ -142,12 +144,18 @@ void process_command(char* cmd) {
             return;
         }
         cat_file_for_cluster(cluster, entry.fileSize);
+    } else if (strcmp(token, "lcd") == 0) {
+        device();
     } else if (strcmp(token, "pwd") == 0) {
         // TODO: no file system supported yet
         printf("/\n");
     } else if (strncmp(token, "cd ", 3) == 0) {
         // TODO: no file system supported yet
         printf("cd not supported yet\n");
+    } else if (strcmp(token, "uptime") == 0) {
+        time_t t;
+        time(&t);
+        printf("up: %lld seconds\n", t);
     } else if (strncmp(token, "memread ", 7) == 0) {
         uintptr_t addr;
         int bytes;

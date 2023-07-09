@@ -1,7 +1,14 @@
 #include <kernel.h>
 
+uint32_t global_counter = 0;
+time_t global_seconds = 0;
+
 void systimer_handler(void) {
     TaskControlBlock* tcb;
+    global_counter++;
+    if (global_counter % 100 == 0) {
+        global_seconds++;
+    }
 
     for (tcb = wait_queue; tcb != NULL; tcb = tcb->next) {
         if (tcb->wait_time == (RELTIME)TMO_FEVR) {

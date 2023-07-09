@@ -1,5 +1,5 @@
-#ifndef _USERMAIN_H_
-#define _USERMAIN_H_
+#ifndef _EXAMPLES_H_
+#define _EXAMPLES_H_
 #include <kernel.h>
 
 extern ID tid_lcd;

@@ -2,6 +2,7 @@
 #define _KERNELDEF_H_
 
 #include <stddef.h>
+#include <time.h>
 
 #include "sysdef.h"
 #include "syslib.h"
@@ -9,7 +10,7 @@
 
 /* constants */
 #define VERSION ("0.0.1")
-#define MAX_TASKS 32
+#define MAX_TASKS 16
 #define MAX_TASK_PRI 16
 #define MAX_FLAGS 8
 #define MAX_SEMAPHORES 8
@@ -19,7 +20,7 @@
 // must be > 5KB for shell (file system handling)
 #define MAIN_TASK_STACK_SIZE (5 * 1024)
 #define MAIN_TASK_STACK_BASE (void*)(INITIAL_STACK_BASE - INITIAL_STACK_SIZE)
-#define TASK_STACK_SIZE (1024)
+#define TASK_STACK_SIZE (2 * 1024)
 #define TASK_STACK_BASE (MAIN_TASK_STACK_BASE - MAIN_TASK_STACK_SIZE)
 #define TASK_STACK_UPPER_LIMIT (TASK_STACK_BASE - TASK_STACK_SIZE * MAX_TASKS)
 #define TASK_STACK_BASE_N(X) (void*)(TASK_STACK_BASE - TASK_STACK_SIZE * X)
@@ -92,6 +93,8 @@ extern TaskControlBlock*
 extern TaskControlBlock* wait_queue;
 extern UW dispatch_running;
 extern FlagControlBlock fcb_table[];
+extern uint32_t global_counter;
+extern time_t global_seconds;
 
 /* global functions */
 extern void reset_handler(void);

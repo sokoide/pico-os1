@@ -38,7 +38,7 @@ int _lseek(int file, int ptr, int dir) {
 char _write_prev_char = 0;
 int _write(int file, char* ptr, int len) {
     for (int i = 0; i < len; i++) {
-        if( *ptr == '\n' && _write_prev_char != '\r')
+        if (*ptr == '\n' && _write_prev_char != '\r')
             sk_uart0_putc('\r');
         _write_prev_char = *ptr;
         sk_uart0_putc(*ptr++);
@@ -107,7 +107,7 @@ void _raise(void) {
 
 int _gettimeofday(struct timeval* tp, struct timezone* tzp) {
     if (tp) {
-        tp->tv_sec = 10;
+        tp->tv_sec = global_seconds;
         tp->tv_usec = 0;
     }
     if (tzp) {
@@ -120,7 +120,7 @@ int _gettimeofday(struct timeval* tp, struct timezone* tzp) {
 clock_t _times(struct tms* tp) {
     clock_t timeval;
 
-    timeval = 10;
+    timeval = 30;
     if (tp) {
         tp->tms_utime = timeval; /* user time */
         tp->tms_stime = 0;       /* system time */
