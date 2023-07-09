@@ -24,8 +24,14 @@ void set_line(char* line, int i) {
 
 void draw_loop(int n, int count) {
     char line[32];
-    /* printf("draw_loop...\n"); */
+    clear_rect(&disp, 0, 20, 128, 10);
     clear_rect(&disp, 0, 34, 128, 64);
+
+    time_t t;
+    time(&t);
+    sprintf(line, "up: %lld seconds", t);
+    ssd1306_draw_string(&disp, 0, 20, 1, line);
+
     for (int i = 0; i < count; i++) {
         if (i + n < MAX_TASKS) {
             set_line(line, i + n);
@@ -75,11 +81,6 @@ void task_lcd_func(INT stacd, void* exinf) {
     clear_rect(&disp, 0, 34, 128, 64);
     sprintf(line, "SP: 0x%08X", get_sp());
     ssd1306_draw_string(&disp, 0, 10, 1, line);
-
-    time_t t;
-    time(&t);
-    sprintf(line, "up: %lld seconds", t);
-    ssd1306_draw_string(&disp, 0, 20, 1, line);
 
     int count = 3;
     for (int n = 0; n < MAX_TASKS; n += count) {
