@@ -113,7 +113,20 @@ void process_command(char* cmd) {
     uint32_t cluster = 0;
     DirectoryEntry entry;
 
-    if (strcmp(token, "whoami") == 0) {
+    if (strcmp(token, "help") == 0) {
+        printf("whoami: show user\n");
+        printf("version: show version\n");
+        printf("fat: show FAT FS info\n");
+        printf("lcd: show stack info in LCD\n");
+        printf("ls\n");
+        printf("cat\n");
+        printf("pwd\n");
+        printf("cd\n");
+        printf("uptime: show uptime\n");
+        printf("memread [address] [bytes]: show memory\n");
+        printf("\n");
+    } else if (strcmp(token, "whoami") == 0) {
+        printf("root\n");
         printf("root\n");
     } else if (strcmp(token, "version") == 0) {
         printf("sokoide os ver: %s\n", VERSION);
@@ -124,6 +137,8 @@ void process_command(char* cmd) {
         fat_print_info();
         fat_print_header_legend();
         fat_print_header_dump();
+    } else if (strcmp(token, "lcd") == 0) {
+        device();
     } else if (strcmp(token, "ls") == 0) {
         token = strtok(NULL, delim);
         if (token != NULL) {
@@ -144,8 +159,6 @@ void process_command(char* cmd) {
             return;
         }
         cat_file_for_cluster(cluster, entry.fileSize);
-    } else if (strcmp(token, "lcd") == 0) {
-        device();
     } else if (strcmp(token, "pwd") == 0) {
         // TODO: no file system supported yet
         printf("/\n");
