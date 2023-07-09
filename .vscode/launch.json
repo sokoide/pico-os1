@@ -10,7 +10,11 @@
             "servertype": "openocd",
             "gdbPath": "arm-none-eabi-gdb",
             "device": "RP2040",
-            "configFiles": ["interface/cmsis-dap.cfg", "target/rp2040.cfg"],
+            "configFiles": [
+                "interface/cmsis-dap.cfg",
+                "target/rp2040.cfg",
+                "interface/adapter-speed.cfg"
+            ],
             // Work around for stopping at main on restart
             "postRestartCommands": ["break main", "continue"],
             "searchDir": [],

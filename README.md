@@ -4,6 +4,12 @@
 
 * Install `arm-none-eabi-gcc`
 * Download from `https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads` or use homebrew
+* Create `adapter-speed.cfg` to make the binary transfer at 10MHz (default 100KHz). This is used by `.vscode/launch.json` -> `configFiles`
+
+```sh
+$ cat ${HOMEBREW_PREFIX}/Cellar/open-ocd/0.12.0/share/openocd/scripts/interface/adapter-speed.cfg
+adapter_khz 10000
+```
 
 ## How to build
 
