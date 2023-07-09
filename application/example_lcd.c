@@ -19,7 +19,7 @@ void clear_rect(ssd1306_t* p, uint32_t x, uint32_t y, uint32_t width,
 }
 
 void set_line(char* line, int i) {
-    sprintf(line, "STK_BASE%02d:0x%08X\n", i, TASK_STACK_BASE_N(i));
+    sprintf(line, "STK_BASE%02d:0x%08X\n", i, (uint32_t)TASK_STACK_BASE_N(i));
 }
 
 void draw_loop(int n, int count) {

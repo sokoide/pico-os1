@@ -54,7 +54,7 @@ void fat_print_info() {
     // count of FAT tables
     printf("tableCount: %d\n", _fat_bs->tableCount);
     printf("rootEntryCount: %d\n", _fat_bs->rootEntryCount);
-    printf("root dir sector count: %lu\n", _fat_bs->rootEntryCount *
+    printf("root dir sector count: %d\n", _fat_bs->rootEntryCount *
                                                sizeof(DirectoryEntry) /
                                                _fat_bs->bytesPerSector);
     printf("total_sectors: %d\n", _fat_bs->totalSectors16);
